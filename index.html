@@ -1,0 +1,3842 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BNH_HMTL_CSS — Phòng thực hành ảo HTML &amp; CSS • Trường THPT B Nghĩa Hưng</title>
+
+  <!-- Google Fonts: Be Vietnam Pro & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            labbg: '#f4f6fb',
+            labprimary: '#4f46e5',
+            labmint: '#10b981',
+          },
+          boxShadow: {
+            card: '0 2px 14px -2px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- CodeMirror 5 CDN (Tô màu cú pháp HTML & CSS chuẩn) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+
+  <style>
+    /* Nền sáng hiện đại theo đúng bảng màu chuẩn LQD_SQL_LAB */
+    body {
+      background-color: #f4f6fb;
+      color: #1e293b;
+      font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    }
+
+    /* Thanh cuộn tinh gọn */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #eef2f7;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Tùy biến trình soạn thảo CodeMirror */
+    .CodeMirror {
+      height: 100% !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 13.5px;
+      line-height: 1.65;
+      background: #ffffff;
+    }
+    .CodeMirror-gutters {
+      background: #f8fafc !important;
+      border-right: 1px solid #e2e8f0 !important;
+      padding-right: 4px;
+    }
+    .CodeMirror-linenumber {
+      color: #94a3b8 !important;
+      font-size: 12px;
+    }
+    .cm-s-material-darker.CodeMirror {
+      background: #181b24 !important;
+      color: #e2e8f0 !important;
+    }
+    .cm-s-material-darker .CodeMirror-gutters {
+      background: #13161e !important;
+      border-right: 1px solid #2a3040 !important;
+    }
+    /* Màu cú pháp sáng rõ nét */
+    .cm-s-default .cm-tag { color: #2563eb; font-weight: 600; }
+    .cm-s-default .cm-attribute { color: #7c3aed; }
+    .cm-s-default .cm-string { color: #db2777; }
+    .cm-s-default .cm-property { color: #0284c7; font-weight: 500; }
+    .cm-s-default .cm-number { color: #059669; font-weight: 600; }
+    .cm-s-default .cm-keyword { color: #4f46e5; font-weight: 600; }
+    .cm-s-default .cm-qualifier { color: #d97706; font-weight: 600; }
+    .cm-s-default .cm-comment { color: #94a3b8; font-style: italic; }
+
+    /* Hiệu ứng trượt Drawer Trợ Lý AI */
+    .drawer-panel {
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .drawer-backdrop {
+      transition: opacity 0.24s ease;
+    }
+
+    /* Chấm xanh trạng thái Engine */
+    @keyframes softPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.9); }
+    }
+    .dot-pulse {
+      animation: softPulse 2s infinite ease-in-out;
+    }
+
+    /* Chuyển mượt kích thước Desktop / Mobile */
+    .preview-frame-transition {
+      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-800">
+
+  <!-- ==================== 1. THANH TIÊU ĐỀ TRÊN CÙNG (HEADER) ==================== -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200/90 shadow-sm">
+    <div class="max-w-[1640px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+
+      <!-- Trái: Icon code nền xanh tím bo góc + Tiêu đề BNH_HMTL_CSS + Phụ đề -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5] to-violet-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-3 3 3 3m8-6l3 3-3 3M14 5l-4 14" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 leading-tight">BNH_HMTL_CSS</h1>
+          <p class="text-[11px] sm:text-xs font-medium text-slate-500 leading-tight">
+            Phòng thực hành ảo HTML &amp; CSS &bull; <span class="text-[#4f46e5] font-semibold">THPT B Nghĩa Hưng</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Giữa: Dropdown chọn 5 Level + Nút Khôi phục mã gốc -->
+      <div class="flex flex-wrap items-center gap-2 flex-1 justify-start lg:justify-center min-w-[260px]">
+        <div class="relative flex items-center max-w-full sm:max-w-[490px] w-full sm:w-auto">
+          <span class="pointer-events-none absolute left-3 text-[#4f46e5]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+          </span>
+          <select id="lessonSelect" aria-label="Chọn Level thực hành HTML và CSS"
+            class="w-full appearance-none pl-9 pr-9 py-2 text-xs sm:text-sm font-semibold text-slate-800 bg-indigo-50/75 hover:bg-indigo-50 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-[#4f46e5] transition cursor-pointer truncate">
+          </select>
+          <span class="pointer-events-none absolute right-2.5 text-slate-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <button id="btnResetLesson" type="button"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 active:scale-[0.98] border border-slate-200 rounded-xl shadow-xs transition cursor-pointer">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Khôi phục mã gốc</span>
+        </button>
+      </div>
+
+      <!-- Phải: Badge Engine sẵn sàng + Nút Trợ Lý AI -->
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-[#10b981] dot-pulse"></span>
+          <span>Engine sẵn sàng</span>
+        </div>
+
+        <button id="btnOpenAiHeader" type="button"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] border border-emerald-200 text-emerald-700 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+          <span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+          <span>✨ Trợ Lý AI</span>
+          <svg class="w-3.5 h-3.5 opacity-75" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 2. NỘI DUNG CHÍNH CHIA 2 CỘT ==================== -->
+  <main class="flex-1 max-w-[1640px] w-full mx-auto px-3 sm:px-5 py-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+    <!-- ==================== CỘT TRÁI: XEM TRƯỚC, PHÂN TÍCH DOM & GHI NHỚ LEVEL ==================== -->
+    <section class="lg:col-span-6 flex flex-col gap-4 min-w-0">
+
+      <!-- Thẻ trắng chính phía trên -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden flex flex-col">
+
+        <!-- Thanh Tab chuyển đổi (3 Tab) + Ô lọc dữ liệu + Desktop/Mobile + Làm mới -->
+        <div class="px-4 py-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
+          <!-- 3 Tab dạng Pill -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button id="tabPreview" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-[#4f46e5] text-white shadow-sm shadow-indigo-500/25">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>Kết quả hiển thị</span>
+              <span id="badgeTagCount" class="px-1.5 py-0.5 text-[10px] rounded-full bg-white/25 text-white font-extrabold">0</span>
+            </button>
+
+            <button id="tabDom" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200/70">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Phân tích thẻ DOM</span>
+            </button>
+
+            <button id="tabNotes" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200/70">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>Ghi nhớ Level</span>
+            </button>
+          </div>
+
+          <!-- Ô Lọc dữ liệu + Desktop/Mobile + Làm mới -->
+          <div class="flex items-center gap-1.5 flex-1 sm:flex-initial justify-end">
+            <div class="relative flex-1 sm:w-40">
+              <span class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
+              <input id="filterInput" type="text" placeholder="Lọc dữ liệu..."
+                class="w-full pl-8 pr-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/25 focus:border-[#4f46e5] focus:bg-white transition" />
+            </div>
+
+            <!-- Chuyển chế độ Desktop / Mobile -->
+            <div class="inline-flex items-center p-0.5 bg-slate-100 rounded-xl border border-slate-200/80" title="Đổi kích thước khung xem trước">
+              <button id="btnViewDesktop" type="button" title="Chế độ Máy tính (Desktop)"
+                class="p-1.5 rounded-lg bg-white text-[#4f46e5] shadow-xs transition cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <button id="btnViewMobile" type="button" title="Chế độ Điện thoại (Mobile 375px)"
+                class="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Nút Làm mới -->
+            <button id="btnRefreshPreview" type="button" title="Làm mới khung hiển thị"
+              class="p-1.5 rounded-xl text-slate-500 hover:text-[#4f46e5] hover:bg-indigo-50 border border-transparent hover:border-indigo-100 transition cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Thanh Pill hiển thị Cấu trúc thẻ & CSS đang dùng -->
+        <div class="px-4 py-3 bg-slate-50/75 border-b border-slate-200/70">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+              <svg class="w-3.5 h-3.5 text-[#4f46e5]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+              <span>Cấu trúc thẻ &amp; CSS đang dùng:</span>
+            </div>
+            <span id="structureCounter" class="text-[11px] font-semibold text-slate-500 shrink-0">0 phần tử DOM &bull; 0 bộ chọn CSS</span>
+          </div>
+
+          <!-- Dải Pill động -->
+          <div id="structurePills" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1"></div>
+
+          <!-- Hộp Tooltip giải thích kiến thức chuẩn SGK khi nhấp vào mỗi Pill -->
+          <div id="pillTooltipBox" class="hidden mt-2.5 px-3 py-2 rounded-xl bg-indigo-50/95 border border-indigo-200/80 text-xs text-slate-700 flex items-start justify-between gap-2">
+            <div class="flex items-start gap-2">
+              <span class="mt-0.5 text-[#4f46e5] shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </span>
+              <p id="pillTooltipText" class="leading-relaxed"></p>
+            </div>
+            <button id="btnClosePillTooltip" type="button" class="text-slate-400 hover:text-slate-600 shrink-0 cursor-pointer" title="Đóng chú thích">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Khu vực hiển thị chính (3 Tab: Preview | Phân tích DOM | Ghi nhớ Level) -->
+        <div class="relative bg-slate-100/60 min-h-[450px] lg:min-h-[505px] flex flex-col">
+
+          <!-- TAB 1: KHUNG XEM TRƯỚC TRỰC TIẾP (IFRAME) -->
+          <div id="panelPreview" class="flex-1 flex flex-col items-center justify-start p-3 sm:p-4 overflow-x-auto">
+            <div id="previewFrameWrapper" class="preview-frame-transition w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[475px]">
+              <!-- Thanh giả lập trình duyệt -->
+              <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between gap-2 shrink-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                </div>
+                <div id="previewAddressBar" class="text-[11px] font-mono text-slate-500 bg-white px-3 py-0.5 rounded-md border border-slate-200/80 truncate max-w-[270px]">
+                  level1_bai1.html
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span id="previewDomPill" class="hidden sm:inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md">
+                    0 DOM
+                  </span>
+                  <span id="previewDeviceLabel" class="text-[10px] font-bold uppercase tracking-wider text-[#4f46e5] bg-indigo-50 px-2 py-0.5 rounded-md">
+                    Desktop
+                  </span>
+                </div>
+              </div>
+
+              <!-- Iframe chạy mã học sinh -->
+              <iframe id="livePreviewFrame" title="Kết quả hiển thị HTML và CSS"
+                sandbox="allow-scripts allow-forms allow-popups"
+                class="w-full flex-1 bg-white border-0"></iframe>
+            </div>
+          </div>
+
+          <!-- TAB 2: BẢNG PHÂN TÍCH THẺ DOM (5 CỘT CHUẨN) -->
+          <div id="panelDom" class="hidden flex-1 bg-white overflow-x-auto max-h-[505px] overflow-y-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="sticky top-0 bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500 z-10">
+                <tr>
+                  <th class="py-2.5 px-3 w-11 text-center">#</th>
+                  <th class="py-2.5 px-3">TÊN THẺ</th>
+                  <th class="py-2.5 px-3">CLASS / ID</th>
+                  <th class="py-2.5 px-3">NỘI DUNG TÓM TẮT</th>
+                  <th class="py-2.5 px-3">THUỘC TÍNH</th>
+                </tr>
+              </thead>
+              <tbody id="domTableBody" class="divide-y divide-slate-100 text-slate-700">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- TAB 3: GHI NHỚ LEVEL (GHI NHỚ • MẸO LÀM BÀI • CẢNH BÁO LỖI) -->
+          <div id="panelNotes" class="hidden flex-1 bg-slate-50/70 p-4 max-h-[505px] overflow-y-auto space-y-3">
+            <!-- Render động theo Level đang chọn -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Thẻ thu gọn (Accordion) phía dưới cột trái: Xem mã HTML hoàn chỉnh -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
+        <button id="btnToggleFullSource" type="button"
+          class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-slate-50/80 transition cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <span class="text-[#4f46e5] font-mono text-sm font-bold">&lt;/&gt;</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-700">Xem mã HTML hoàn chỉnh (Full Document Syntax)</span>
+          </div>
+          <svg id="chevronFullSource" class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="fullSourceBody" class="hidden border-t border-slate-100 px-4 py-3 bg-slate-50/60">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <span class="text-[11px] font-medium text-slate-500">Tài liệu HTML5 chuẩn kèm chú thích bản quyền Trường THPT B Nghĩa Hưng &amp; GV Nguyễn Quốc An.</span>
+            <div class="flex items-center gap-2">
+              <button id="btnCopyFullHtml" type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 text-xs font-semibold text-slate-700 hover:text-[#4f46e5] transition cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>Sao chép</span>
+              </button>
+              <button id="btnDownloadHtml" type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#4f46e5] hover:bg-indigo-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Tải tệp .html</span>
+              </button>
+            </div>
+          </div>
+          <pre id="fullHtmlPreviewCode" class="p-3.5 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-72 leading-relaxed border border-slate-800"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CỘT PHẢI: TRÌNH SOẠN THẢO & DANH SÁCH BÀI TẬP ==================== -->
+    <section class="lg:col-span-6 flex flex-col gap-4 min-w-0">
+
+      <!-- Thẻ trắng phía trên: TRÌNH SOẠN THẢO HTML & CSS -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden flex flex-col">
+
+        <!-- Tiêu đề + Tab chuyển HTML / CSS / Cả hai + Thanh công cụ -->
+        <div class="px-4 pt-3.5 pb-2.5 border-b border-slate-100 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-indigo-50 border border-indigo-100 text-[#4f46e5] font-mono text-xs font-extrabold flex items-center justify-center">&gt;_</span>
+              <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-slate-800 uppercase">TRÌNH SOẠN THẢO HTML &amp; CSS</h2>
+              <span class="px-2 py-0.5 rounded-md bg-violet-50 border border-violet-200/80 text-violet-700 text-[10px] font-bold">Tô màu cú pháp chuẩn</span>
+            </div>
+
+            <!-- Nhóm tab chuyển chế độ HTML | CSS | Cả hai -->
+            <div class="inline-flex items-center p-0.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-semibold">
+              <button id="modeHtml" type="button" class="px-2.5 py-1 rounded-lg bg-white text-[#4f46e5] shadow-xs transition cursor-pointer">
+                HTML
+              </button>
+              <button id="modeCss" type="button" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                CSS
+              </button>
+              <button id="modeSplit" type="button" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                Cả hai
+              </button>
+            </div>
+          </div>
+
+          <!-- Hàng nút công cụ -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="btnFormatCode" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50/75 hover:bg-indigo-100/80 border border-indigo-200/80 text-[#4f46e5] text-xs font-semibold transition cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h14" />
+              </svg>
+              <span>Format Cấu trúc</span>
+            </button>
+
+            <button id="btnOpenAiToolbar" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-semibold transition cursor-pointer">
+              <span>✨ Trợ Lý AI</span>
+            </button>
+
+            <button id="btnToggleTheme" type="button" title="Chuyển giao diện Sáng / Tối cho trình soạn thảo"
+              class="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#4f46e5] transition cursor-pointer">
+              <svg id="iconMoon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              <svg id="iconSun" class="w-4 h-4 hidden text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
+
+            <button id="btnCopyCode" type="button" title="Sao chép mã đang mở"
+              class="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-[#4f46e5] transition cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+
+            <button id="btnClearCode" type="button" title="Xóa trắng mã đang soạn"
+              class="p-1.5 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-600 hover:text-rose-600 transition cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+
+            <button id="btnExplainAi" type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 text-xs font-bold transition cursor-pointer">
+              <span>💡 Giải thích mã này</span>
+            </button>
+          </div>
+
+          <!-- Nút chính nổi bật Chạy mã Ctrl+Enter + Công tắc tự động chạy -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+            <button id="btnRunCode" type="button"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4f46e5] hover:bg-indigo-700 active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/25 transition cursor-pointer">
+              <span>▶ Chạy mã</span>
+              <kbd class="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded-md bg-indigo-800/70 text-indigo-100 border border-indigo-400/30">Ctrl+Enter</kbd>
+            </button>
+
+            <div class="flex items-center gap-3">
+              <label class="inline-flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer select-none">
+                <input id="chkAutoRun" type="checkbox" checked class="sr-only peer" />
+                <div class="w-8 h-4.5 bg-slate-200 rounded-full peer peer-checked:bg-[#10b981] relative transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:after:translate-x-3.5 shadow-inner"></div>
+                <span>Tự động chạy khi gõ</span>
+              </label>
+              <span id="lastRunTime" class="hidden sm:inline-block text-[11px] font-mono text-slate-400">Đã cập nhật</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Khung Soạn thảo CodeMirror -->
+        <div class="relative bg-white">
+          <div id="editorsGrid" class="grid grid-cols-1 h-[285px] divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
+            <!-- Khung HTML -->
+            <div id="htmlEditorContainer" class="flex flex-col h-full min-h-0 overflow-hidden">
+              <div id="htmlSplitLabel" class="hidden px-3 py-1 bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-[#4f46e5] flex items-center justify-between">
+                <span>index.html — Nội dung HTML</span>
+                <span class="text-slate-400 font-mono">HTML5</span>
+              </div>
+              <div class="flex-1 min-h-0 relative">
+                <textarea id="htmlTextarea" class="w-full h-full p-3 font-mono text-sm resize-none focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <!-- Khung CSS -->
+            <div id="cssEditorContainer" class="hidden flex flex-col h-full min-h-0 overflow-hidden">
+              <div id="cssSplitLabel" class="hidden px-3 py-1 bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-violet-600 flex items-center justify-between">
+                <span>style.css — Định dạng CSS</span>
+                <span class="text-slate-400 font-mono">CSS3</span>
+              </div>
+              <div class="flex-1 min-h-0 relative">
+                <textarea id="cssTextarea" class="w-full h-full p-3 font-mono text-sm resize-none focus:outline-none"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bộ đếm "... từ • ... ký tự" góc dưới bên phải -->
+          <div id="codeStatsBadge"
+            class="pointer-events-none absolute bottom-2.5 right-3 z-20 px-2.5 py-1 rounded-lg bg-slate-100/95 border border-slate-200/90 text-[11px] font-mono font-medium text-slate-500 shadow-xs">
+            0 từ &bull; 0 ký tự
+          </div>
+        </div>
+      </div>
+
+      <!-- Thẻ trắng phía dưới cột phải: GỢI Ý BÀI TẬP THỰC HÀNH (n) -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden flex flex-col">
+        <div class="px-4 py-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#4f46e5]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            <h3 id="exerciseListTitle" class="text-xs font-extrabold uppercase tracking-wide text-slate-800">
+              GỢI Ý BÀI TẬP THỰC HÀNH (5):
+            </h3>
+          </div>
+          <span class="text-[11px] font-medium text-slate-400">Nhấp để điền nhanh vào trình soạn thảo</span>
+        </div>
+
+        <div id="exerciseList" class="p-3 space-y-2.5 max-h-[305px] overflow-y-auto bg-slate-50/40">
+          <!-- Render động danh sách bài tập của Level đang chọn -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 3. CHÂN TRANG BẢN QUYỀN & GIÁO VIÊN (HỖ TRỢ FLEX-WRAP, KHÔNG CẮT CHỮ) ==================== -->
+  <footer class="mt-auto bg-white border-t border-slate-200/90 py-3 px-3 sm:px-5">
+    <div class="max-w-[1640px] mx-auto flex flex-wrap items-center justify-center sm:justify-between gap-x-3 gap-y-1.5 text-xs text-slate-600 leading-relaxed">
+      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-2 gap-y-1 font-medium">
+        <span class="w-2 h-2 rounded-full bg-[#4f46e5] shrink-0"></span>
+        <span>&copy; 2026 Bản quyền thuộc về <strong class="text-slate-800">Trường THPT B Nghĩa Hưng</strong></span>
+        <span class="text-slate-300">|</span>
+        <span>Giáo viên: <strong class="text-slate-800">Nguyễn Quốc An</strong> &bull; THPT B Nghĩa Hưng - Tỉnh Ninh Bình</span>
+        <span class="text-slate-300">|</span>
+        <strong class="text-[#4f46e5]">BNH_HMTL_CSS</strong>
+      </div>
+      <div class="text-[11px] font-semibold text-slate-400 shrink-0">
+        4 Level SGK + Level 5 Flexbox (23 bài thực hành) &bull; 65 câu trắc nghiệm, đúng/sai &amp; bẫy HSG
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== 4. DRAWER TRỢ LÝ AI (GEMINI API) ==================== -->
+  <div id="aiDrawerWrapper" class="fixed inset-0 z-50 hidden">
+    <div id="aiDrawerBackdrop" class="drawer-backdrop fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] opacity-0"></div>
+
+    <aside id="aiDrawerPanel"
+      class="drawer-panel fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl border-l border-slate-200 flex flex-col translate-x-full">
+
+      <!-- Header Drawer AI -->
+      <div class="px-4 py-3.5 bg-gradient-to-r from-[#10b981] to-teal-600 text-white flex items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center font-bold text-base">
+            ✨
+          </div>
+          <div>
+            <h2 class="text-sm font-extrabold leading-tight">Trợ Lý AI — BNH_HMTL_CSS</h2>
+            <p class="text-[11px] text-emerald-50 font-medium">Gia sư HTML &amp; CSS • Trường THPT B Nghĩa Hưng</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button id="btnToggleApiConfig" type="button" title="Cấu hình Gemini API Key (tùy chọn khi chạy ngoài)"
+            class="p-1.5 rounded-lg hover:bg-white/15 text-emerald-50 transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <button id="btnClearChat" type="button" title="Làm mới hội thoại"
+            class="p-1.5 rounded-lg hover:bg-white/15 text-emerald-50 transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+          <button id="btnCloseAiDrawer" type="button" title="Đóng Trợ Lý AI"
+            class="p-1.5 rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cấu hình API Key tùy chọn -->
+      <div id="apiConfigBox" class="hidden px-4 py-3 bg-amber-50 border-b border-amber-200 text-xs space-y-2">
+        <p class="text-amber-800 font-medium">
+          Mặc định ứng dụng sử dụng kết nối Gemini có sẵn. Nếu triển khai tệp riêng trên máy hoặc Vercel, bạn có thể nhập Gemini API Key cá nhân tại đây:
+        </p>
+        <div class="flex gap-2">
+          <input id="customApiKeyInput" type="password" placeholder="Dán Gemini API Key (để trống để dùng mặc định)..."
+            class="flex-1 px-2.5 py-1.5 rounded-lg border border-amber-300 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/30" />
+          <button id="btnSaveApiKey" type="button"
+            class="px-3 py-1.5 rounded-lg bg-[#10b981] hover:bg-emerald-600 text-white font-semibold cursor-pointer">Lưu</button>
+        </div>
+      </div>
+
+      <!-- Nút gợi ý nhanh -->
+      <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200/80 flex flex-wrap gap-1.5 shrink-0">
+        <button type="button" data-ai-prompt="Hãy kiểm tra lỗi cú pháp HTML và CSS trong đoạn mã hiện tại (như thiếu thẻ đóng, đóng sai thứ tự, nhầm rowspan/colspan, quên dấu chấm phẩy ; trong CSS, nhầm margin và padding) và hướng dẫn sửa ngắn gọn."
+          class="ai-quick-btn px-2.5 py-1 rounded-lg bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] font-semibold text-slate-700 hover:text-emerald-700 transition cursor-pointer">
+          🔍 Kiểm tra lỗi HTML/CSS
+        </button>
+        <button type="button" data-ai-prompt="Hãy nâng cấp phần CSS cho bài thực hành hiện tại đẹp mắt hơn theo tông màu Trường THPT B Nghĩa Hưng. Trả về khối mã css riêng để em bấm áp dụng ngay."
+          class="ai-quick-btn px-2.5 py-1 rounded-lg bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-[11px] font-semibold text-slate-700 hover:text-[#4f46e5] transition cursor-pointer">
+          ✨ Nâng cấp giao diện CSS
+        </button>
+        <button type="button" data-ai-prompt="Hãy ra 2 câu hỏi trắc nghiệm nhanh ôn tập đúng kiến thức của Level đang mở kèm đáp án giải thích."
+          class="ai-quick-btn px-2.5 py-1 rounded-lg bg-white hover:bg-violet-50 border border-slate-200 hover:border-violet-300 text-[11px] font-semibold text-slate-700 hover:text-violet-700 transition cursor-pointer">
+          📝 Trắc nghiệm ôn Level
+        </button>
+      </div>
+
+      <!-- Khung tin nhắn AI -->
+      <div id="aiChatMessages" class="flex-1 overflow-y-auto p-4 space-y-3.5 bg-slate-50/50">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">AI</div>
+          <div class="bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-xs sm:text-[13px] text-slate-700 shadow-xs leading-relaxed">
+            Xin chào học sinh <strong>Trường THPT B Nghĩa Hưng</strong>! Mình là <strong>Trợ Lý AI BNH_HMTL_CSS</strong>. Bạn có thể nhấn <em>"Giải thích mã này"</em> để mình phân tích từng thẻ HTML &amp; thuộc tính CSS theo chuẩn SGK, kiểm tra lỗi <code>rowspan/colspan</code>, lỗi quên dấu <code>;</code> hoặc gợi ý nâng cấp giao diện nhé!
+          </div>
+        </div>
+      </div>
+
+      <!-- Form nhập câu hỏi AI -->
+      <form id="aiChatForm" class="p-3 bg-white border-t border-slate-200 flex items-end gap-2 shrink-0">
+        <textarea id="aiChatInput" rows="2" placeholder="Hỏi Trợ Lý AI về thẻ HTML, thuộc tính CSS, bài tập Level 1–5..."
+          class="flex-1 px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-[#10b981] focus:bg-white resize-none"></textarea>
+        <button id="btnSendAi" type="submit"
+          class="px-4 py-2.5 rounded-xl bg-[#10b981] hover:bg-emerald-600 disabled:opacity-50 text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer shrink-0 flex items-center gap-1.5">
+          <span>Gửi</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </form>
+    </aside>
+  </div>
+
+  <!-- ==================== 5. HỘP THÔNG BÁO TOAST ==================== -->
+  <div id="toastContainer" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================== 6. LOGIC ỨNG DỤNG & BỘ 5 LEVEL (23 BÀI) ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. TÀI NGUYÊN SVG TRỰC TIẾP (DATA URI UTF-8, KHÔNG VỠ ẢNH, KHÔNG BASE64)
+     *************************************************************************/
+    const BNH_EMBLEM_SVG = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 210">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#4f46e5"/>
+            <stop offset="100%" stop-color="#0ea5e9"/>
+          </linearGradient>
+        </defs>
+        <rect width="420" height="210" rx="22" fill="url(#bg)"/>
+        <circle cx="88" cy="105" r="54" fill="#ffffff" fill-opacity="0.18"/>
+        <circle cx="88" cy="105" r="42" fill="#ffffff"/>
+        <text x="88" y="114" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="800" fill="#4f46e5">BNH</text>
+        <text x="160" y="76" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#e0e7ff">HUY HIỆU TRƯỜNG HỌC</text>
+        <text x="160" y="106" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#ffffff">THPT B NGHĨA HƯNG</text>
+        <text x="160" y="132" font-family="Arial, sans-serif" font-size="13.5" fill="#dcfce7">Tỉnh Ninh Bình • CLB Tin học 11A1</text>
+        <rect x="160" y="148" width="175" height="24" rx="12" fill="#10b981"/>
+        <text x="247" y="164" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="700" fill="#ffffff">BNH_HMTL_CSS LAB</text>
+      </svg>`
+    );
+
+    const BNH_VIDEO_POSTER_SVG = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270">
+        <defs>
+          <linearGradient id="vg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#312e81"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+        </defs>
+        <rect width="480" height="270" fill="url(#vg)"/>
+        <circle cx="240" cy="118" r="36" fill="#10b981"/>
+        <polygon points="231,103 231,133 257,118" fill="#ffffff"/>
+        <text x="240" y="184" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#ffffff">Video Giới thiệu Trường THPT B Nghĩa Hưng</text>
+        <text x="240" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="12.5" fill="#c7d2fe">Thuộc tính poster hiển thị trước khi phát video</text>
+      </svg>`
+    );
+
+    // Hai tài liệu HTML con dùng cho bài tập <iframe> target theo name (Level 3 #2)
+    const IFRAME_CLB_THETHAO_URL = "data:text/html;charset=utf-8," + encodeURIComponent(
+      `<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;padding:18px;margin:0;background:#eef2ff;color:#1e293b;}h3{margin:0 0 8px;color:#4f46e5;}p{margin:6px 0;font-size:14px;line-height:1.6;}span{display:inline-block;background:#4f46e5;color:#fff;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;margin-bottom:8px;}</style></head><body><span>CLB THỂ THAO</span><h3>Câu lạc bộ Thể thao — THPT B Nghĩa Hưng</h3><p>Gồm các bộ môn sôi nổi: <strong>Bóng đá, Bóng chuyền, Cầu lông, Điền kinh</strong>.</p><p>Lịch sinh hoạt: 16h30 Thứ 3 &amp; Thứ 5 hàng tuần tại sân vận động nhà trường.</p></body></html>`
+    );
+
+    const IFRAME_CLB_NGHETHUAT_URL = "data:text/html;charset=utf-8," + encodeURIComponent(
+      `<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;padding:18px;margin:0;background:#ecfdf5;color:#1e293b;}h3{margin:0 0 8px;color:#059669;}p{margin:6px 0;font-size:14px;line-height:1.6;}span{display:inline-block;background:#10b981;color:#fff;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;margin-bottom:8px;}</style></head><body><span>CLB NGHỆ THUẬT</span><h3>Câu lạc bộ Nghệ thuật — THPT B Nghĩa Hưng</h3><p>Quy tụ các bạn yêu thích <strong>Âm nhạc, Mỹ thuật, Nhiếp ảnh và Truyền thông</strong>.</p><p>Lịch sinh hoạt: 16h30 Thứ 4 hàng tuần tại phòng đa năng nhà trường.</p></body></html>`
+    );
+
+    /*************************************************************************
+     * 2. TỪ ĐIỂN ĐẦY ĐỦ THẺ HTML (LEVEL 1–5) & THUỘC TÍNH CSS
+     *************************************************************************/
+    const HTML_TAG_META = {
+      h1: { badge: 'HEADING', desc: 'Tiêu đề nội dung cấp 1 (lớn/đậm nhất, nằm trong <body>). Khác với <title> hiển thị trên tab trình duyệt.' },
+      h2: { badge: 'HEADING', desc: 'Tiêu đề nội dung cấp 2 cho các đề mục chính trong trang.' },
+      h3: { badge: 'HEADING', desc: 'Tiêu đề nội dung cấp 3 cho các mục nhỏ hoặc thẻ thông tin.' },
+      h4: { badge: 'HEADING', desc: 'Tiêu đề nội dung cấp 4.' },
+      p: { badge: 'BLOCK', desc: 'Tạo một đoạn văn bản hoàn chỉnh, trình duyệt tự thêm khoảng trống trên/dưới (khác với <br> chỉ xuống dòng).' },
+      br: { badge: 'RỖNG', desc: 'Phần tử RỖNG (không có thẻ đóng) dùng để ngắt xuống dòng mà không tạo đoạn mới.' },
+      hr: { badge: 'RỖNG', desc: 'Phần tử RỖNG dùng để kẻ một đường ngang phân cách giữa hai vùng nội dung.' },
+      div: { badge: 'BLOCK', desc: 'Phần tử khối (block-level) chiếm dòng riêng, dùng để nhóm một vùng nội dung lớn và tạo bố cục.' },
+      span: { badge: 'INLINE', desc: 'Phần tử nội tuyến (inline) nằm xen trong dòng văn bản, dùng để định dạng một đoạn chữ nhỏ.' },
+      strong: { badge: 'NGỮ NGHĨA', desc: 'In đậm văn bản đồng thời nhấn mạnh tầm quan trọng về mặt NGỮ NGHĨA (nên ưu tiên hơn <b>).' },
+      b: { badge: 'HIỂN THỊ', desc: 'In đậm thuần túy về mặt hiển thị, không mang ý nghĩa nhấn mạnh ngữ nghĩa.' },
+      em: { badge: 'NGỮ NGHĨA', desc: 'In nghiêng có ý nghĩa nhấn mạnh (emphasis) về nội dung/ngữ điệu.' },
+      i: { badge: 'HIỂN THỊ', desc: 'In nghiêng thuần túy về mặt hình thức (ví dụ tên khoa học, thuật ngữ nước ngoài).' },
+      u: { badge: 'VĂN BẢN', desc: 'Gạch chân văn bản. Trong CSS hiện đại thường thay bằng text-decoration: underline.' },
+      mark: { badge: 'HIGHLIGHT', desc: 'Đánh dấu, tô nền nổi bật cho từ khóa quan trọng.' },
+      small: { badge: 'VĂN BẢN', desc: 'Giảm cỡ chữ nhỏ hơn văn bản thường, hay dùng cho ghi chú phụ.' },
+      sup: { badge: 'CHỈ SỐ TRÊN', desc: 'Hiển thị chỉ số trên (số mũ toán học, ví dụ ax²).' },
+      sub: { badge: 'CHỈ SỐ DƯỚI', desc: 'Hiển thị chỉ số dưới (công thức hóa học, ví dụ H₂O).' },
+      del: { badge: 'NGỮ NGHĨA', desc: 'Đánh dấu văn bản đã bị xóa/chỉnh sửa (hiển thị gạch ngang).' },
+      s: { badge: 'HIỂN THỊ', desc: 'Gạch ngang thuần túy về hiển thị cho nội dung không còn đúng/giá cũ (khác <del> về ngữ nghĩa).' },
+      ol: { badge: 'DANH SÁCH', desc: 'Danh sách có thứ tự (Ordered List), hỗ trợ thuộc tính type ("1","A","a","I","i") và start.' },
+      ul: { badge: 'DANH SÁCH', desc: 'Danh sách không có thứ tự (Unordered List), đổi kí hiệu bằng style="list-style-type: disc|circle|square|none".' },
+      li: { badge: 'MỤC DS', desc: 'Một mục con nằm bên trong <ol> hoặc <ul>. Khi lồng danh sách, đặt danh sách con bên trong <li> cha.' },
+      dl: { badge: 'DS MÔ TẢ', desc: 'Danh sách mô tả (Description List) gồm các cặp thẻ <dt> (thuật ngữ) và <dd> (giải thích).' },
+      dt: { badge: 'THUẬT NGỮ', desc: 'Tên thuật ngữ/mục tiêu đề trong danh sách mô tả <dl>.' },
+      dd: { badge: 'MÔ TẢ', desc: 'Nội dung giải thích/định nghĩa cho thẻ <dt> đứng trước nó trong <dl>.' },
+      table: { badge: 'BẢNG', desc: 'Thẻ bao ngoài tạo bảng dữ liệu theo hàng và cột; nên định dạng viền bằng CSS border-collapse.' },
+      caption: { badge: 'TIÊU ĐỀ BẢNG', desc: 'Tiêu đề chính của bảng, đặt ngay sau thẻ mở <table>.' },
+      thead: { badge: 'ĐẦU BẢNG', desc: 'Nhóm các hàng tiêu đề cột của bảng.' },
+      tbody: { badge: 'THÂN BẢNG', desc: 'Nhóm các hàng dữ liệu chính trong bảng.' },
+      tr: { badge: 'HÀNG', desc: 'Table Row — tạo một hàng ngang trong bảng. Số <tr> bằng số hàng khai báo.' },
+      th: { badge: 'Ô TIÊU ĐỀ', desc: 'Table Header — ô tiêu đề cột/hàng (chữ đậm, căn giữa mặc định), hỗ trợ rowspan và colspan.' },
+      td: { badge: 'Ô DỮ LIỆU', desc: 'Table Data — ô chứa dữ liệu thông thường trong bảng, hỗ trợ rowspan (gộp dọc) và colspan (gộp ngang).' },
+      a: { badge: 'LIÊN KẾT', desc: 'Thẻ tạo siêu liên kết (Anchor) với href (đích), target ("_blank" hoặc tên iframe) và rel="noopener noreferrer".' },
+      img: { badge: 'RỖNG • ẢNH', desc: 'Phần tử RỖNG chèn hình ảnh (src bắt buộc, alt rất quan trọng). Chỉ nên đặt 1 chiều width hoặc height để tránh méo ảnh.' },
+      audio: { badge: 'MEDIA', desc: 'Nhúng âm thanh trực tiếp trong HTML5 (hỗ trợ controls, loop, muted, các thẻ <source> dự phòng).' },
+      video: { badge: 'MEDIA', desc: 'Nhúng video trong HTML5 (controls, width, height, poster, loop; autoplay cần đi kèm muted trên trình duyệt hiện đại).' },
+      source: { badge: 'RỖNG • MEDIA', desc: 'Khai báo nhiều định dạng tệp âm thanh/video (MP4, WebM, Ogg, MP3) bên trong <audio>/<video> để tăng tương thích.' },
+      iframe: { badge: 'KHUNG NHÚNG', desc: 'Khung nội tuyến hiển thị một trang/tài liệu HTML khác ngay bên trong trang; kết hợp name với target của thẻ <a>.' },
+      form: { badge: 'BIỂU MẪU', desc: 'Bao ngoài toàn bộ biểu mẫu thu thập dữ liệu, có thuộc tính action (đích nhận) và method (GET hoặc POST).' },
+      label: { badge: 'NHÃN FORM', desc: 'Nhãn mô tả ô nhập liệu; thuộc tính for phải trùng với id của <input> để liên kết chính xác.' },
+      input: { badge: 'RỖNG • INPUT', desc: 'Phần tử RỖNG nhập liệu đa dạng theo type (text, password, radio, checkbox, number, date, file, email, submit, reset, button).' },
+      select: { badge: 'DROPDOWN', desc: 'Danh sách chọn sổ xuống chứa các thẻ <option>.' },
+      option: { badge: 'LỰA CHỌN', desc: 'Một phương án bên trong <select>, dùng thuộc tính selected để chọn sẵn.' },
+      textarea: { badge: 'VĂN BẢN DÀI', desc: 'Vùng nhập văn bản tự do nhiều dòng với thuộc tính rows và cols.' },
+      fieldset: { badge: 'NHÓM FORM', desc: 'Nhóm các phần tử liên quan trong biểu mẫu thành một khung có đường viền gọn gàng.' },
+      legend: { badge: 'TIÊU ĐỀ NHÓM', desc: 'Đặt tiêu đề hiển thị trên đường viền của khung <fieldset>.' },
+      button: { badge: 'NÚT BẤM', desc: 'Tạo nút bấm tương tác hoặc gửi biểu mẫu (type="submit", "reset", "button").' },
+      header: { badge: 'HTML5', desc: 'Phần tử ngữ nghĩa xác định khu vực đầu trang hoặc thanh điều hướng.' },
+      nav: { badge: 'HTML5', desc: 'Phần tử ngữ nghĩa chứa các liên kết điều hướng chính.' },
+      main: { badge: 'HTML5', desc: 'Phần tử ngữ nghĩa chứa nội dung trọng tâm của trang.' },
+      section: { badge: 'HTML5', desc: 'Chia trang thành các phần mục theo chủ đề rõ ràng.' },
+      article: { badge: 'HTML5', desc: 'Chứa một bài viết hoặc thông báo độc lập.' },
+      aside: { badge: 'HTML5', desc: 'Thanh nội dung phụ bổ trợ (sidebar).' },
+      footer: { badge: 'HTML5', desc: 'Phần tử chân trang chứa thông tin liên hệ và bản quyền.' },
+      style: { badge: 'CSS NỘI BỘ', desc: 'Khai báo Internal CSS ngay trong tệp HTML.' },
+      code: { badge: 'MÃ NGUỒN', desc: 'Hiển thị đoạn mã hoặc từ khóa bằng phông chữ đơn cách.' },
+      blockquote: { badge: 'TRÍCH DẪN', desc: 'Hiển thị đoạn trích dẫn nổi bật.' },
+    };
+
+    const CSS_PROP_META = {
+      color: 'Đặt màu chữ (tên màu tiếng Anh, mã HEX #rrggbb hoặc rgb(r,g,b)).',
+      'background-color': 'Đặt màu nền cho phần tử.',
+      background: 'Đặt màu nền hoặc nền chuyển sắc linear-gradient.',
+      'font-family': 'Chỉ định phông chữ (có thể liệt kê nhiều phông dự phòng cách nhau dấu phẩy).',
+      'font-size': 'Cỡ chữ (phải kèm đơn vị đo như px, em, % — thiếu đơn vị sẽ bị trình duyệt bỏ qua).',
+      'font-weight': 'Độ đậm của chữ (normal, bold, 400–800).',
+      'font-style': 'Kiểu chữ nghiêng (normal, italic).',
+      'text-align': 'Căn lề đoạn văn bản (left, right, center, justify).',
+      'text-decoration': 'Trang trí gạch chân/gạch ngang (none, underline, line-through).',
+      'text-transform': 'Đổi chữ hoa/thường tự động khi hiển thị (uppercase, lowercase, capitalize).',
+      'text-indent': 'Thụt lề dòng đầu tiên của đoạn văn bản (ví dụ 15px).',
+      'line-height': 'Chiều cao dòng (khoảng cách thoáng giữa các dòng chữ).',
+      border: 'Khai báo gộp viền: độ dày + kiểu nét (solid, dashed, dotted, double) + màu viền.',
+      'border-style': 'Kiểu đường viền: solid (liền), dashed (đứt nét), dotted (chấm), double (2 nét).',
+      'border-collapse': 'Gộp viền các ô liền kề trong bảng thành một đường viền sắc nét (border-collapse: collapse).',
+      width: 'Chiều rộng của phần tử.',
+      height: 'Chiều cao của phần tử.',
+      margin: 'Khoảng cách từ viền phần tử ra BÊN NGOÀI tới các phần tử xung quanh.',
+      padding: 'Khoảng cách từ viền phần tử vào BÊN TRONG tới nội dung của chính nó.',
+      display: 'Quy định cách hiển thị phần tử (block, inline, inline-block, flex, grid).',
+      'justify-content': 'Căn chỉnh vị trí/khoảng cách các phần tử con theo trục chính Flexbox.',
+      'align-items': 'Căn chỉnh các phần tử con theo trục vuông góc trong Flexbox.',
+      'flex-wrap': 'Cho phép các mục Flexbox tự xuống hàng khi màn hình hẹp.',
+      gap: 'Đặt khoảng cách đều giữa các phần tử con trong Flexbox.',
+      'list-style-type': 'Kiểu kí hiệu đầu dòng của danh sách (disc, circle, square, none).',
+    };
+
+    /*************************************************************************
+     * 3. BỘ DỮ LIỆU 5 LEVEL (23 BÀI TẬP) + GHI NHỚ / MẸO / CẢNH BÁO CHUẨN SGK
+     *************************************************************************/
+    const LESSONS = [
+      /* ==================== LEVEL 1 (PHẦN 1–4) — 5 BÀI ==================== */
+      {
+        id: 'LEVEL_1',
+        name: 'LEVEL 1: Tổng quan HTML, Cấu trúc & Định dạng văn bản (Phần 1–4)',
+        shortName: 'level1_html_coban.html',
+        notes: [
+          {
+            kind: 'remember',
+            title: 'GHI NHỚ — Mối quan hệ Trang web, Website, Trình duyệt & Khung tệp HTML',
+            items: [
+              '<strong>Website</strong> gồm nhiều <strong>trang web</strong>; mỗi trang lưu trong tệp văn bản thuần <code>.html</code> (tệp trang chủ thường là <code>index.html</code>); <strong>trình duyệt</strong> đọc mã nguồn và dựng cây DOM để hiển thị.',
+              '<strong>Thứ tự khung bắt buộc:</strong> <code>&lt;!DOCTYPE html&gt;</code> &rarr; <code>&lt;html&gt;</code> &rarr; <code>&lt;head&gt;</code> (chứa <code>&lt;meta charset="utf-8"&gt;</code>, <code>&lt;title&gt;</code>) &rarr; <code>&lt;body&gt;</code>.',
+              '<strong>4 khái niệm cốt lõi:</strong> <em>Thẻ (tag)</em> như <code>&lt;p&gt;</code>; <em>Phần tử (element)</em> gồm thẻ mở + nội dung + thẻ đóng; <em>Thuộc tính (attribute)</em> viết trong thẻ mở; <em>Phần tử rỗng</em> (<code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;input&gt;</code>) không có thẻ đóng.'
+            ]
+          },
+          {
+            kind: 'tip',
+            title: 'MẸO LÀM BÀI — Trắc nghiệm & Đọc mã nhanh Level 1',
+            items: [
+              '<strong>HTML có phải ngôn ngữ lập trình không?</strong> &rarr; Đáp án chuẩn: <strong>KHÔNG</strong>. HTML là <em>ngôn ngữ đánh dấu siêu văn bản</em> (Hypertext Markup Language) mô tả cấu trúc nội dung.',
+              '<code>&lt;!DOCTYPE html&gt;</code> không phải phần tử HTML; <code>&lt;meta charset="utf-8"&gt;</code> giúp hiển thị chuẩn tiếng Việt có dấu.',
+              'Khi đọc mã có thẻ lồng nhau (ví dụ <code>&lt;strong&gt;&lt;em&gt;...&lt;/em&gt;&lt;/strong&gt;</code>), nội dung bên trong nhận CẢ định dạng của thẻ cha lẫn thẻ con. Các thực thể <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;amp;</code> dùng để hiện kí tự <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>.'
+            ]
+          },
+          {
+            kind: 'warning',
+            title: 'CẢNH BÁO LỖI — Những lỗi học sinh rất dễ nhầm ở Level 1',
+            items: [
+              '<strong>Phân biệt &lt;title&gt; và &lt;h1&gt;:</strong> <code>&lt;title&gt;</code> nằm trong <code>&lt;head&gt;</code> (hiện trên tab trình duyệt); <code>&lt;h1&gt;</code> nằm trong <code>&lt;body&gt;</code> (tiêu đề nội dung trên trang).',
+              '<strong>Đóng thẻ sai thứ tự:</strong> Phải theo quy tắc <em>"vào sau, ra trước"</em>: <code>&lt;b&gt;&lt;i&gt;...&lt;/i&gt;&lt;/b&gt;</code> là ĐÚNG, <code>&lt;b&gt;&lt;i&gt;...&lt;/b&gt;&lt;/i&gt;</code> là SAI.',
+              '<strong>Thẻ &lt;big&gt;:</strong> Không còn được hỗ trợ trong chuẩn HTML5 (phải dùng <code>font-size</code> của CSS). Không nhầm <em>thuộc tính HTML</em> (<code>href</code>, <code>id</code>) với <em>thuộc tính CSS</em> (<code>color</code>, <code>font-size</code>).'
+            ]
+          }
+        ],
+        exercises: [
+          {
+            title: 'Giới thiệu bản thân — Nguyễn Việt Hưng (11A1)',
+            difficulty: 'Cơ bản',
+            desc: 'Minh họa cấu trúc phần tử HTML, <h1>, <h2>, <p>, <hr>, <br>, <div>, <span>, chú thích <!-- --> và bản quyền Trường THPT B Nghĩa Hưng.',
+            html: `<!-- Đây là chú thích HTML: Trình duyệt sẽ bỏ qua dòng này -->
+<div class="ho-so">
+  <span class="nhan-truong">Trường THPT B Nghĩa Hưng &bull; Tỉnh Ninh Bình</span>
+
+  <h1>Xin chào, mình là Nguyễn Việt Hưng</h1>
+  <h2>Học sinh lớp 11A1 - Trường THPT B Nghĩa Hưng</h2>
+
+  <p>
+    Mình là thành viên tích cực của tập thể lớp <strong>11A1</strong>.<br>
+    Mình yêu thích môn <strong>Tin học</strong> và đang thực hành xây dựng trang web bằng HTML &amp; CSS.
+  </p>
+
+  <!-- Thẻ <hr> là phần tử rỗng (không có thẻ đóng), kẻ đường phân cách -->
+  <hr>
+
+  <p>
+    Định hướng năm học 2026: Làm chủ cấu trúc cây DOM, thành thạo từ
+    <span class="highlight">Level 1 đến Level 4</span> và tham gia CLB Tin học nhà trường.
+  </p>
+
+  <footer>
+    &copy; 2026 Trường THPT B Nghĩa Hưng &bull; Phòng thực hành BNH_HMTL_CSS
+  </footer>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background-color: #f4f6fb;
+  padding: 22px;
+  color: #1e293b;
+}
+
+.ho-so {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-top: 5px solid #4f46e5;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 620px;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.08);
+}
+
+.nhan-truong {
+  display: inline-block;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  color: #4f46e5;
+  font-size: 23px;
+  margin: 4px 0 6px;
+}
+
+h2 {
+  color: #0f172a;
+  font-size: 15.5px;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+
+p {
+  line-height: 1.75;
+  font-size: 14px;
+  color: #475569;
+}
+
+hr {
+  border: none;
+  border-top: 1px dashed #cbd5e1;
+  margin: 16px 0;
+}
+
+.highlight {
+  color: #059669;
+  font-weight: 700;
+  background: #ecfdf5;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+}`
+          },
+          {
+            title: 'Thẻ định dạng ngữ nghĩa & hiển thị',
+            difficulty: 'Cơ bản',
+            desc: 'Phân biệt trực quan các cặp thẻ <strong> vs <b>, <em> vs <i>, cùng <u>, <mark>, <small>, <del> và <s>.',
+            html: `<div class="khung-the">
+  <h2>Bảng so sánh thẻ định dạng — Lớp 11A1 THPT B Nghĩa Hưng</h2>
+
+  <p>1. In đậm: <strong>&lt;strong&gt; nhấn mạnh về NGỮ NGHĨA (quan trọng)</strong> — khác với <b>&lt;b&gt; chỉ đậm về hiển thị</b>.</p>
+
+  <p>2. In nghiêng: <em>&lt;em&gt; nhấn mạnh ngữ điệu</em> — khác với <i>&lt;i&gt; chỉ nghiêng hình thức (tên khoa học)</i>.</p>
+
+  <p>3. Trang trí &amp; đánh dấu: <u>Gạch chân từ khóa</u>, <mark>tô nền nổi bật bằng &lt;mark&gt;</mark>, và <small>chú thích cỡ nhỏ bằng &lt;small&gt;</small>.</p>
+
+  <p>4. Gạch ngang: <del>&lt;del&gt; nội dung đã bị xóa (ngữ nghĩa chỉnh sửa)</del> và <s>&lt;s&gt; thông tin không còn áp dụng (ví dụ lịch cũ)</s>.</p>
+
+  <footer>&copy; 2026 Trường THPT B Nghĩa Hưng</footer>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-the {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 14px; font-size: 18px; color: #4f46e5; }
+p { font-size: 14px; line-height: 1.8; color: #334155; margin: 10px 0; }
+mark { background: #fef08a; padding: 2px 6px; border-radius: 4px; }
+del { color: #dc2626; }
+s { color: #64748b; }
+footer { margin-top: 16px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 10px; }`
+          },
+          {
+            title: 'Công thức Toán – Hóa & Thực thể HTML',
+            difficulty: 'Trung bình',
+            desc: 'Áp dụng <sup>, <sub> và thực thể &lt;, &gt;, &ne;, &minus; cho bài toán biện luận phương trình bậc 2 & công thức H₂O.',
+            html: `<article class="bai-toan">
+  <h2>Biện luận số nghiệm của phương trình bậc 2</h2>
+
+  <h3>1. Bài toán (Lớp 11A1 — THPT B Nghĩa Hưng)</h3>
+  <p>Xác định số nghiệm của phương trình: <strong>ax<sup>2</sup> + bx + c = 0</strong> (với a &ne; 0).</p>
+
+  <h3>2. Cách làm</h3>
+  <p><strong>B1.</strong> Xác định các hệ số a, b và c.</p>
+  <p><strong>B2.</strong> Tính biệt thức &Delta; = b<sup>2</sup> &minus; 4ac.</p>
+  <p><strong>B3.</strong> Kết luận dựa vào thực thể so sánh HTML:</p>
+  <p class="kq">+ Nếu &Delta; &lt; 0: Phương trình vô nghiệm.</p>
+  <p class="kq">+ Nếu &Delta; = 0: Phương trình có nghiệm kép duy nhất.</p>
+  <p class="kq">+ Nếu &Delta; &gt; 0: Phương trình có <em>hai nghiệm phân biệt</em>.</p>
+
+  <hr>
+  <p><strong>Mở rộng Hóa học với &lt;sub&gt;:</strong> Phân tử nước là <strong>H<sub>2</sub>O</strong>, khí cacbonic là <strong>CO<sub>2</sub></strong>.</p>
+</article>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.bai-toan {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #10b981;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 12px; color: #0f172a; font-size: 19px; }
+h3 { margin: 14px 0 6px; color: #4f46e5; font-size: 15px; }
+p { margin: 6px 0; font-size: 14px; color: #334155; line-height: 1.75; }
+.kq { padding-left: 14px; color: #065f46; }
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }`
+          },
+          {
+            title: 'Định dạng trực tiếp với thuộc tính style (Inline CSS)',
+            difficulty: 'Trung bình',
+            desc: 'Thực hành thuộc tính style với 3 cách viết màu (tên màu, HEX, rgb(255,0,0)), phông chữ, cỡ chữ, căn lề và gạch chân.',
+            html: `<div class="khung-inline">
+  <h2 style="color: #4f46e5; text-align: center; font-family: Tahoma, sans-serif;">
+    Thực hành thuộc tính style — THPT B Nghĩa Hưng
+  </h2>
+
+  <p style="color: red; font-family: Tahoma, sans-serif; font-size: 15px; text-decoration: underline;">
+    Kiểu 1 (Tên màu): Chữ đỏ, phông Tahoma, cỡ 15px, có gạch chân.
+  </p>
+
+  <p style="color: rgb(255, 0, 0); background-color: #fff2cc; font-size: 14px; font-weight: bold; padding: 10px;">
+    Kiểu 2 (Hệ màu RGB): Chữ đỏ viết bằng rgb(255, 0, 0), nền vàng nhạt (#fff2cc), in đậm.
+  </p>
+
+  <p style="color: #059669; font-style: italic; text-align: right; font-size: 15px;">
+    Kiểu 3 (Mã HEX #059669): Chữ xanh ngọc, in nghiêng, căn lề phải — Nguyễn Việt Hưng (11A1).
+  </p>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-inline {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 630px;
+  margin: 0 auto;
+}`
+          },
+          {
+            title: 'Cấu trúc cây DOM & Quan hệ Cha – Con – Anh em',
+            difficulty: 'Cơ bản',
+            desc: 'Minh họa <div> cha chứa <h1>, <p>, <hr>, <span> nội tuyến và quy tắc đóng thẻ lồng nhau "vào sau, ra trước".',
+            html: `<!-- Phần tử CHA: <div> chứa 4 phần tử CON là anh em (sibling) cùng cấp -->
+<div class="cay-cha">
+  <h1>Trang Web và HTML — THPT B Nghĩa Hưng</h1>
+
+  <p>
+    Đây là phần tử con thứ 2 (cùng cấp anh em với &lt;h1&gt; và &lt;hr&gt;).
+    Bên trong nó có phần tử cháu <span class="chau">nội tuyến &lt;span&gt;</span>.
+  </p>
+
+  <hr>
+
+  <p>
+    Quy tắc lồng thẻ <strong><em>"vào sau, ra trước"</em></strong>:
+    thẻ &lt;em&gt; mở sau thẻ &lt;strong&gt; nên phải đóng &lt;/em&gt; trước &lt;/strong&gt;!
+  </p>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 22px;
+}
+
+.cay-cha {
+  background: #ffffff;
+  border: 2px solid #4f46e5;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h1 { margin: 0 0 10px; font-size: 20px; color: #312e81; }
+p { font-size: 14px; color: #334155; line-height: 1.75; }
+hr { border: none; border-top: 2px dotted #cbd5e1; margin: 14px 0; }
+.chau {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+}`
+          }
+        ]
+      },
+
+      /* ==================== LEVEL 2 (PHẦN 5–8) — 5 BÀI ==================== */
+      {
+        id: 'LEVEL_2',
+        name: 'LEVEL 2: Danh sách, Bảng biểu, Liên kết & Hình ảnh (Phần 5–8)',
+        shortName: 'level2_bang_lienket_anh.html',
+        notes: [
+          {
+            kind: 'remember',
+            title: 'GHI NHỚ — Danh sách, Bảng, Đường dẫn & Hình ảnh',
+            items: [
+              '<strong>3 loại danh sách:</strong> <code>&lt;ol&gt;</code> (có thứ tự: <code>type</code>, <code>start</code>), <code>&lt;ul&gt;</code> (không thứ tự: <code>list-style-type</code>), <code>&lt;dl&gt;</code> (mô tả gồm cặp <code>&lt;dt&gt;</code> + <code>&lt;dd&gt;</code>).',
+              '<strong>Bảng biểu:</strong> <code>&lt;table&gt;</code>, <code>&lt;caption&gt;</code>, <code>&lt;tr&gt;</code> (hàng), <code>&lt;th&gt;</code> (ô tiêu đề), <code>&lt;td&gt;</code> (ô dữ liệu). Nên dùng CSS <code>border-collapse: collapse</code> thay cho thuộc tính <code>border</code> cũ.',
+              '<strong>Đường dẫn tương đối:</strong> cùng thư mục (<code>ten.html</code>), xuống thư mục con (<code>images/sun.png</code>), lùi lên thư mục cha 1 cấp (<code>../index.html</code>). Liên kết nội bộ dùng <code>href="#id"</code>.'
+            ]
+          },
+          {
+            kind: 'tip',
+            title: 'MẸO LÀM BÀI — Xử lí rowspan/colspan & Đường dẫn',
+            items: [
+              '<strong>Quy trình giải bài gộp ô:</strong> Đếm số <code>&lt;tr&gt;</code> (số hàng) &rarr; Với <code>colspan="n"</code> hàng đó bớt <code>(n-1)</code> ô; với <code>rowspan="n"</code> mỗi hàng trong <code>(n-1)</code> hàng kế tiếp phải bỏ qua ô ở cột bị lấn.',
+              '<strong>Khi nào dùng đường dẫn tuyệt đối / tương đối?</strong> Liên kết ra website ngoài &rarr; tuyệt đối (<code>https://...</code>). Liên kết giữa các trang trong cùng website &rarr; tương đối để không hỏng khi di chuyển thư mục.',
+              '<strong>Ảnh làm liên kết:</strong> Lồng trực tiếp <code>&lt;img&gt;</code> vào giữa cặp thẻ <code>&lt;a href="..."&gt;...&lt;/a&gt;</code>.'
+            ]
+          },
+          {
+            kind: 'warning',
+            title: 'CẢNH BÁO LỖI — Các lỗi kinh điển ở Level 2',
+            items: [
+              '<strong>Phân biệt &lt;li&gt; và &lt;dd&gt;:</strong> Không dùng <code>&lt;li&gt;</code> trong <code>&lt;dl&gt;</code>. Khi tạo danh sách lồng nhau, phải đặt danh sách con <strong>bên trong thẻ &lt;li&gt; cha</strong>.',
+              '<strong>Nhầm rowspan &amp; colspan:</strong> <code>rowspan</code> gộp theo HÀNG (chiều DỌC); <code>colspan</code> gộp theo CỘT (chiều NGANG). Quên bớt ô bị lấn sẽ làm bảng bị lệch.',
+              '<strong>Méo ảnh &amp; Bảo mật target="_blank":</strong> Chỉ nên đặt 1 chiều <code>width</code> hoặc <code>height</code> để ảnh giữ đúng tỉ lệ và luôn có <code>alt</code>. Khi mở tab mới bằng <code>target="_blank"</code>, nên thêm <code>rel="noopener noreferrer"</code>.'
+            ]
+          }
+        ],
+        exercises: [
+          {
+            title: 'Ba loại danh sách: <ol>, <ul> và <dl>',
+            difficulty: 'Cơ bản',
+            desc: 'Minh họa <ol type="A" start="3">, <ul style="list-style-type:square"> và danh sách mô tả <dl>/<dt>/<dd> về CLB THPT B Nghĩa Hưng.',
+            html: `<div class="ds-tong-hop">
+  <h2>Ba loại danh sách HTML — Trường THPT B Nghĩa Hưng</h2>
+
+  <h3>1. Danh sách có thứ tự (&lt;ol type="A" start="3"&gt;)</h3>
+  <ol type="A" start="3">
+    <li>Ôn tập cấu trúc HTML5 (bắt đầu từ chữ C)</li>
+    <li>Thực hành danh sách &amp; bảng biểu</li>
+    <li>Xây dựng trang web lớp 11A1</li>
+  </ol>
+
+  <h3>2. Danh sách không thứ tự (kí hiệu hình vuông)</h3>
+  <ul style="list-style-type: square;">
+    <li>CLB Tin học &amp; Lập trình BNH</li>
+    <li>CLB Tiếng Anh giao tiếp</li>
+    <li>CLB Bóng đá học đường</li>
+  </ul>
+
+  <h3>3. Danh sách mô tả (&lt;dl&gt;, &lt;dt&gt;, &lt;dd&gt;)</h3>
+  <dl>
+    <dt>CLB Tin học BNH</dt>
+    <dd>Nơi học sinh Nguyễn Việt Hưng và lớp 11A1 luyện HTML, CSS và lập trình thi đấu.</dd>
+    <dt>CLB Truyền thông</dt>
+    <dd>Ghi lại các sự kiện, hoạt động ngoại khóa tại Trường THPT B Nghĩa Hưng.</dd>
+  </dl>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 18px;
+}
+
+.ds-tong-hop {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 12px; font-size: 18px; color: #4f46e5; }
+h3 { margin: 14px 0 6px; font-size: 14.5px; color: #0f172a; }
+ol, ul { margin: 0; padding-left: 24px; font-size: 13.5px; color: #334155; line-height: 1.8; }
+dt { font-weight: 700; color: #059669; margin-top: 8px; font-size: 13.5px; }
+dd { margin: 2px 0 6px 18px; font-size: 13px; color: #475569; }`
+          },
+          {
+            title: 'Danh sách lồng nhau nhiều cấp',
+            difficulty: 'Trung bình',
+            desc: 'Đặt danh sách con <ol> đúng chuẩn bên trong thẻ <li> cha (THỂ THAO và NGHỆ THUẬT) của Trường THPT B Nghĩa Hưng.',
+            html: `<div class="long-nhau">
+  <h2>Hoạt động Câu lạc bộ — Trường THPT B Nghĩa Hưng</h2>
+  <p>Chú ý: Danh sách con <code>&lt;ol&gt;</code> phải đặt <strong>bên trong</strong> cặp thẻ <code>&lt;li&gt;...&lt;/li&gt;</code> cha!</p>
+
+  <ul class="cap-1">
+    <li><strong>THỂ THAO</strong>
+      <ol>
+        <li>Bóng đá nam/nữ khối 11</li>
+        <li>Bóng chuyền hơi</li>
+        <li>Karatedo &amp; Cầu lông</li>
+      </ol>
+    </li>
+    <li><strong>NGHỆ THUẬT</strong>
+      <ol>
+        <li>Âm nhạc &amp; Đội văn nghệ lớp 11A1</li>
+        <li>Mỹ thuật &amp; Thiết kế báo tường</li>
+      </ol>
+    </li>
+  </ul>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.long-nhau {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 6px; color: #312e81; font-size: 18px; }
+p { margin: 0 0 14px; font-size: 13px; color: #64748b; }
+.cap-1 { padding-left: 20px; color: #1e293b; font-size: 14px; line-height: 1.8; }
+.cap-1 > li { margin-bottom: 10px; }
+ol { margin-top: 4px; padding-left: 22px; color: #475569; font-weight: 400; }`
+          },
+          {
+            title: 'Bảng biểu & Gộp ô rowspan / colspan',
+            difficulty: 'Khá',
+            desc: 'Dùng <caption>, <th rowspan="2">, <th colspan="2"> và CSS border-collapse: collapse tạo Bảng điểm Lớp 11A1.',
+            html: `<div class="khung-bang">
+  <table>
+    <caption>Bảng điểm Lớp 11A1 - THPT B Nghĩa Hưng</caption>
+    <thead>
+      <tr>
+        <th rowspan="2">Họ và tên</th>
+        <th colspan="2">Điểm thi</th>
+      </tr>
+      <tr>
+        <!-- Hàng 2 bỏ qua cột "Họ và tên" vì đã bị gộp rowspan="2" ở hàng 1 -->
+        <th>Toán</th>
+        <th>Văn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hs-chinh">
+        <td><strong>Nguyễn Việt Hưng</strong></td>
+        <td>9.5</td>
+        <td>8.5</td>
+      </tr>
+      <tr>
+        <td>Trần Thị Minh Anh</td>
+        <td>9.0</td>
+        <td>9.0</td>
+      </tr>
+      <tr>
+        <td>Phạm Quang Huy</td>
+        <td>8.5</td>
+        <td>8.0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-bang {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+caption {
+  font-size: 16px;
+  font-weight: 800;
+  color: #4f46e5;
+  margin-bottom: 12px;
+}
+
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+thead th {
+  background-color: #eef2ff;
+  color: #312e81;
+}
+
+.hs-chinh {
+  background-color: #ecfdf5;
+  color: #065f46;
+}`
+          },
+          {
+            title: 'Siêu liên kết <a>: Tuyệt đối, Tương đối & Nội bộ (#id)',
+            difficulty: 'Trung bình',
+            desc: 'Thực hành target="_blank" rel="noopener noreferrer", phân biệt ./ và ../, cùng liên kết nội bộ <a href="#thong_tin"> chạy thật.',
+            html: `<div class="khung-link">
+  <h2>Thực hành Siêu liên kết — THPT B Nghĩa Hưng</h2>
+
+  <div class="nhom-link">
+    <a class="btn-link" href="#thong_tin">⬇ Nhảy tới mục Thông tin lớp 11A1 (#thong_tin)</a>
+    <a class="btn-link ngoai" href="https://developer.mozilla.org/vi/" target="_blank" rel="noopener noreferrer">
+      🌐 Mở tài liệu MDN ở tab mới (tuyệt đối + an toàn)
+    </a>
+  </div>
+
+  <div class="bang-duong-dan">
+    <h3>Ghi nhớ Đường dẫn tương đối:</h3>
+    <ul>
+      <li><code>thong_tin.html</code> — Tệp nằm CÙNG thư mục hiện tại.</li>
+      <li><code>bai_tap/bai_1.html</code> — Đi XUỐNG thư mục con <code>bai_tap/</code>.</li>
+      <li><code>../index.html</code> — Lùi LÊN 1 cấp thư mục cha.</li>
+    </ul>
+  </div>
+
+  <div class="khoang-cach">Cuộn xuống hoặc nhấp nút màu tím phía trên để thử nhảy nội bộ...</div>
+
+  <section id="thong_tin" class="dich-nhay">
+    <h3>🎯 Đích liên kết nội bộ (#thong_tin)</h3>
+    <p>Bạn đã nhảy thành công tới phần thông tin của <strong>Nguyễn Việt Hưng — Lớp 11A1, Trường THPT B Nghĩa Hưng</strong>!</p>
+    <a href="#" class="ve-dau">⬆ Quay lên đầu trang</a>
+  </section>
+</div>`,
+            css: `html { scroll-behavior: smooth; }
+body { font-family: 'Be Vietnam Pro', sans-serif; background: #f4f6fb; padding: 18px; }
+
+.khung-link {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 12px; font-size: 18px; color: #0f172a; }
+.nhom-link { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+
+.btn-link {
+  display: inline-block;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-link.ngoai { background: #10b981; }
+.bang-duong-dan { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; font-size: 13px; color: #334155; }
+.bang-duong-dan h3 { margin: 0 0 6px; font-size: 14px; color: #4f46e5; }
+.bang-duong-dan ul { margin: 0; padding-left: 18px; line-height: 1.8; }
+code { background: #eef2ff; color: #4338ca; padding: 1px 5px; border-radius: 4px; }
+
+.khoang-cach {
+  margin: 18px 0;
+  padding: 70px 16px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.dich-nhay {
+  background: #ecfdf5;
+  border: 2px solid #10b981;
+  border-radius: 12px;
+  padding: 16px;
+}
+.dich-nhay h3 { margin: 0 0 6px; color: #065f46; font-size: 15px; }
+.dich-nhay p { margin: 0 0 10px; font-size: 13.5px; color: #1e293b; }
+.ve-dau { font-size: 12.5px; font-weight: 700; color: #4f46e5; text-decoration: none; }`
+          },
+          {
+            title: 'Chèn hình ảnh <img> & Dùng ảnh làm liên kết',
+            difficulty: 'Trung bình',
+            desc: 'Minh họa thẻ rỗng <img> với alt, chỉ đặt 1 chiều width="260" để không méo ảnh và lồng <img> trong <a> làm liên kết hình ảnh.',
+            html: `<div class="khung-anh">
+  <h2>Chèn hình ảnh &amp; Ảnh làm liên kết — THPT B Nghĩa Hưng</h2>
+
+  <p>1. Chỉ khai báo <strong>1 chiều width="260"</strong> để trình duyệt tự tính height đúng tỉ lệ (không làm méo ảnh):</p>
+  <img src="${BNH_EMBLEM_SVG}" alt="Huy hiệu Trường THPT B Nghĩa Hưng" width="260" class="anh-chuan">
+
+  <p>2. Lồng thẻ <code>&lt;img&gt;</code> bên trong thẻ <code>&lt;a&gt;</code> để biến ảnh thành siêu liên kết (nhấp vào ảnh bên dưới):</p>
+  <a href="#mo_ta_anh" class="link-anh">
+    <img src="${BNH_EMBLEM_SVG}" alt="Nhấn để xem thông tin CLB Tin học BNH" width="220">
+  </a>
+
+  <p id="mo_ta_anh" class="chu-thich">
+    ✓ Thuộc tính <strong>alt</strong> luôn cần có để hiển thị văn bản thay thế khi ảnh lỗi và hỗ trợ trình đọc màn hình.
+  </p>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-anh {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 10px; font-size: 18px; color: #4f46e5; }
+p { font-size: 13.5px; color: #334155; line-height: 1.7; }
+.anh-chuan { display: block; border-radius: 14px; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.16); margin: 8px 0 16px; }
+.link-anh { display: inline-block; border-radius: 14px; transition: transform 0.2s; }
+.link-anh:hover { transform: scale(1.03); }
+.link-anh img { display: block; border-radius: 14px; border: 2px solid #10b981; }
+.chu-thich { margin-top: 14px; padding: 10px 12px; background: #f8fafc; border-radius: 10px; font-size: 12.5px; color: #475569; }`
+          }
+        ]
+      },
+
+      /* ==================== LEVEL 3 (PHẦN 9–11) — 5 BÀI ==================== */
+      {
+        id: 'LEVEL_3',
+        name: 'LEVEL 3: Âm thanh, Video, Khung Iframe & Biểu mẫu Form (Phần 9–11)',
+        shortName: 'level3_media_iframe_form.html',
+        notes: [
+          {
+            kind: 'remember',
+            title: 'GHI NHỚ — Media (<audio>/<video>), <iframe> & Biểu mẫu (<form>)',
+            items: [
+              '<strong>&lt;audio&gt; &amp; &lt;video&gt;:</strong> Hỗ trợ <code>controls</code>, <code>autoplay</code>, <code>muted</code>, <code>loop</code>. Riêng <code>&lt;video&gt;</code> mới có <code>width</code>, <code>height</code>, <code>poster</code>. Nên khai báo nhiều <code>&lt;source&gt;</code> dự phòng định dạng.',
+              '<strong>Khung nội tuyến &lt;iframe&gt;:</strong> Nhúng tài liệu HTML khác vào trang. Đặt <code>name</code> của iframe trùng với <code>target</code> của thẻ <code>&lt;a&gt;</code> để mở liên kết ngay bên trong khung.',
+              '<strong>Biểu mẫu &lt;form&gt;:</strong> Gom nhóm bằng <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>; liên kết <code>&lt;label for="x"&gt;</code> với <code>&lt;input id="x"&gt;</code>; dữ liệu nộp đi luôn có dạng cặp <code>name=giá_trị</code>.'
+            ]
+          },
+          {
+            kind: 'tip',
+            title: 'MẸO LÀM BÀI — Phân biệt các cặp khái niệm hay thi ở Level 3',
+            items: [
+              '<strong>radio vs checkbox:</strong> <code>radio</code> chỉ chọn 1 phương án trong nhóm (phải <em>cùng name</em>); <code>checkbox</code> chọn nhiều phương án độc lập.',
+              '<strong>name vs id:</strong> <code>name</code> là tên dữ liệu gửi đi (nhiều radio trùng <code>name</code>); <code>id</code> là định danh duy nhất trên toàn trang.',
+              '<strong>value vs placeholder:</strong> <code>value</code> là giá trị thật được gửi đi; <code>placeholder</code> chỉ là chữ gợi ý mờ, KHÔNG được gửi đi. <strong>GET</strong> gắn dữ liệu lên URL; <strong>POST</strong> gửi ẩn trong thân yêu cầu.'
+            ]
+          },
+          {
+            kind: 'warning',
+            title: 'CẢNH BÁO LỖI — Các bẫy thường gặp ở Level 3',
+            items: [
+              '<strong>Video không tự phát (autoplay):</strong> Trình duyệt hiện đại CHẶN <code>autoplay</code> có âm thanh &rarr; cần thêm thuộc tính <code>muted</code> để video tự phát.',
+              '<strong>Iframe hiển thị trống:</strong> Nhiều website lớn chặn bị nhúng vào iframe vì lí do bảo mật (chống clickjacking), dù <code>src</code> đúng. Luôn thêm thuộc tính <code>title</code> cho iframe.',
+              '<strong>Label không kích hoạt ô nhập:</strong> Do <code>for</code> của <code>&lt;label&gt;</code> không khớp <code>id</code> của <code>&lt;input&gt;</code>. Các checkbox/radio không được chọn (unchecked) sẽ KHÔNG có mặt trong dữ liệu gửi đi.'
+            ]
+          }
+        ],
+        exercises: [
+          {
+            title: 'Chèn Âm thanh <audio> và Video <video>',
+            difficulty: 'Cơ bản',
+            desc: 'Minh họa <audio controls>, <video controls muted loop poster="..."> với nhiều <source> dự phòng và dòng văn bản fallback.',
+            html: `<div class="khung-media">
+  <h2>Chèn Âm thanh &amp; Video HTML5 — THPT B Nghĩa Hưng</h2>
+
+  <h3>1. Thẻ &lt;video&gt; kèm poster, muted, loop &amp; nhiều &lt;source&gt;</h3>
+  <video controls muted loop width="360" poster="${BNH_VIDEO_POSTER_SVG}">
+    <source src="videos/gioi_thieu_bnh.mp4" type="video/mp4">
+    <source src="videos/gioi_thieu_bnh.ogg" type="video/ogg">
+    Trình duyệt của bạn không hỗ trợ thẻ HTML video.
+  </video>
+
+  <h3>2. Thẻ &lt;audio&gt; kèm thanh điều khiển controls</h3>
+  <audio controls>
+    <source src="audio/bai_hat_truong_bnh.mp3" type="audio/mpeg">
+    <source src="audio/bai_hat_truong_bnh.ogg" type="audio/ogg">
+    Trình duyệt của bạn không hỗ trợ thẻ HTML audio.
+  </audio>
+
+  <div class="luu-y">
+    <strong>⚠ Lưu ý trình duyệt hiện đại:</strong> Thuộc tính <code>autoplay</code> thường chỉ hoạt động khi đi kèm <code>muted</code> (tắt tiếng mặc định). Khai báo nhiều thẻ <code>&lt;source&gt;</code> giúp trình duyệt chọn định dạng hỗ trợ đầu tiên.
+  </div>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 18px;
+}
+
+.khung-media {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 10px; font-size: 18px; color: #4f46e5; }
+h3 { margin: 14px 0 8px; font-size: 14px; color: #0f172a; }
+video { max-width: 100%; border-radius: 12px; border: 1px solid #cbd5e1; display: block; }
+audio { width: 100%; margin-top: 4px; }
+
+.luu-y {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 10px;
+  font-size: 12.5px;
+  color: #78350f;
+  line-height: 1.65;
+}`
+          },
+          {
+            title: 'Khung nội tuyến <iframe> & target theo name',
+            difficulty: 'Trung bình',
+            desc: 'Mở liên kết Câu lạc bộ Thể thao & Nghệ thuật ngay bên trong <iframe name="khung_clb"> bằng thuộc tính target="khung_clb".',
+            html: `<div class="khung-iframe-demo">
+  <h2>Thực hành &lt;iframe&gt; &amp; target="khung_clb" — THPT B Nghĩa Hưng</h2>
+  <p>Nhấn vào từng liên kết bên dưới để tải nội dung trực tiếp vào khung <code>name="khung_clb"</code>:</p>
+
+  <nav class="menu-clb">
+    <a href="${IFRAME_CLB_THETHAO_URL}" target="khung_clb" class="tab-a">⚽ Câu lạc bộ Thể thao</a>
+    <a href="${IFRAME_CLB_NGHETHUAT_URL}" target="khung_clb" class="tab-a mint">🎨 Câu lạc bộ Nghệ thuật</a>
+  </nav>
+
+  <iframe
+    name="khung_clb"
+    src="${IFRAME_CLB_THETHAO_URL}"
+    width="100%"
+    height="190"
+    title="Giới thiệu Câu lạc bộ THPT B Nghĩa Hưng">
+  </iframe>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 18px;
+}
+
+.khung-iframe-demo {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 630px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 6px; font-size: 17.5px; color: #0f172a; }
+p { margin: 0 0 12px; font-size: 13px; color: #64748b; }
+.menu-clb { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+
+.tab-a {
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tab-a.mint { background: #10b981; }
+iframe { border: 2px solid #c7d2fe; border-radius: 12px; background: #ffffff; }`
+          },
+          {
+            title: 'Biểu mẫu đăng nhập & Liên kết <label for> – <input id>',
+            difficulty: 'Cơ bản',
+            desc: 'Thực hành <form action="/dang-nhap" method="post">, liên kết label–input và các kiểu input: text, password, email, date, number, file.',
+            html: `<form class="form-bnh" action="/dang-nhap" method="post" onsubmit="event.preventDefault(); document.getElementById('tb-dn').textContent='✓ Biểu mẫu hợp lệ (method=POST)!';">
+  <h2>Đăng nhập &amp; Hồ sơ Học sinh THPT B Nghĩa Hưng</h2>
+
+  <label for="tk">Tên đăng nhập (text, required):</label>
+  <input id="tk" type="text" name="username" placeholder="VD: BNH11A1_NguyenVietHung" required>
+
+  <label for="mk">Mật khẩu (password):</label>
+  <input id="mk" type="password" name="password" placeholder="Nhập mật khẩu..." required>
+
+  <label for="em">Email học tập (email):</label>
+  <input id="em" type="email" name="email" placeholder="hung11a1@thptbnghiahung.edu.vn">
+
+  <div class="hang-doi">
+    <div>
+      <label for="ns">Ngày sinh (date):</label>
+      <input id="ns" type="date" name="ngay_sinh" value="2009-09-15">
+    </div>
+    <div>
+      <label for="stt">Số thứ tự (number):</label>
+      <input id="stt" type="number" name="stt" value="15" min="1" max="50">
+    </div>
+  </div>
+
+  <label for="tep">Tệp bài tập đính kèm (file):</label>
+  <input id="tep" type="file" name="bai_tap">
+
+  <input type="submit" value="Đăng nhập &amp; Lưu hồ sơ" class="nut-gui">
+  <p id="tb-dn" class="thong-bao"></p>
+</form>`,
+            css: `body { font-family: 'Be Vietnam Pro', sans-serif; background: #f4f6fb; padding: 16px; }
+
+.form-bnh {
+  max-width: 470px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+h2 { margin: 0 0 12px; font-size: 17px; color: #4f46e5; }
+label { display: block; font-size: 12.5px; font-weight: 600; color: #334155; margin: 10px 0 4px; cursor: pointer; }
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.hang-doi { display: flex; gap: 10px; }
+.hang-doi > div { flex: 1; }
+
+.nut-gui {
+  margin-top: 14px;
+  background: #4f46e5;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.thong-bao { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #059669; text-align: center; }`
+          },
+          {
+            title: 'Chọn lựa với radio, checkbox, <select> & <textarea>',
+            difficulty: 'Trung bình',
+            desc: 'Phân biệt nhóm radio cùng name="gt" (chỉ chọn 1), checkbox chọn nhiều (checked), <select>/<option selected> và <textarea rows="4" cols="40">.',
+            html: `<form class="form-chon">
+  <h2>Phiếu khảo sát Lớp 11A1 — THPT B Nghĩa Hưng</h2>
+
+  <p class="nhom-tieude">1. Giới tính (radio cùng <code>name="gt"</code> — chỉ chọn 1):</p>
+  <label class="inline-lbl"><input type="radio" name="gt" value="Nam" checked> Nam</label>
+  <label class="inline-lbl"><input type="radio" name="gt" value="Nu"> Nữ</label>
+
+  <p class="nhom-tieude">2. Câu lạc bộ yêu thích (checkbox — chọn nhiều):</p>
+  <label class="inline-lbl"><input type="checkbox" name="clb" value="TinHoc" checked> Tin học</label>
+  <label class="inline-lbl"><input type="checkbox" name="clb" value="TiengAnh" checked> Tiếng Anh</label>
+  <label class="inline-lbl"><input type="checkbox" name="clb" value="TheThao"> Thể thao</label>
+
+  <label for="lop" class="block-lbl">3. Chọn khối lớp (&lt;select&gt;):</label>
+  <select id="lop" name="lop">
+    <option value="10A1">Lớp 10A1</option>
+    <option value="11A1" selected>Lớp 11A1 (mặc định selected)</option>
+    <option value="12A1">Lớp 12A1</option>
+  </select>
+
+  <label for="gopy" class="block-lbl">4. Góp ý hoạt động lớp (&lt;textarea&gt;):</label>
+  <textarea id="gopy" name="noi_dung_gopy" rows="4" cols="40" placeholder="Nhập ý kiến góp ý của bạn..."></textarea>
+</form>`,
+            css: `body { font-family: 'Be Vietnam Pro', sans-serif; background: #f4f6fb; padding: 18px; }
+
+.form-chon {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+h2 { margin: 0 0 10px; font-size: 17px; color: #312e81; }
+.nhom-tieude, .block-lbl { display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin: 12px 0 6px; }
+.inline-lbl { display: inline-flex; align-items: center; gap: 5px; margin-right: 14px; font-size: 13.5px; color: #334155; cursor: pointer; }
+input[type="radio"], input[type="checkbox"] { accent-color: #4f46e5; }
+
+select, textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+}`
+          },
+          {
+            title: 'Biểu mẫu hoàn chỉnh <fieldset>, <legend> & Xem dữ liệu gửi đi',
+            difficulty: 'Khá',
+            desc: 'Phiếu đăng ký thi THPT B Nghĩa Hưng với <fieldset>, <legend>, submit/reset/button và xem ngay chuỗi cặp name=giá_trị được gửi đi.',
+            html: `<form id="form-thi" class="phieu-thi" data-inspect-submit="true">
+  <h2>Phiếu đăng ký dự thi — Trường THPT B Nghĩa Hưng</h2>
+
+  <fieldset>
+    <legend>Thông tin thí sinh</legend>
+    <label for="ht">Họ và tên:</label>
+    <input id="ht" type="text" name="ho_ten" value="Nguyễn Việt Hưng" required>
+
+    <label for="lop_thi">Lớp:</label>
+    <select id="lop_thi" name="lop">
+      <option value="11A1" selected>11A1</option>
+      <option value="11A2">11A2</option>
+      <option value="12A1">12A1</option>
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Môn thi lựa chọn</legend>
+    <label class="opt"><input type="radio" name="bang_thi" value="Web_HTML_CSS" checked> Bảng Web HTML &amp; CSS</label>
+    <label class="opt"><input type="radio" name="bang_thi" value="Thuat_Toan"> Bảng Thuật toán</label>
+    <label class="opt"><input type="checkbox" name="nhan_tai_lieu" value="Co" checked> Nhận bộ đề ôn luyện Level 1–4</label>
+  </fieldset>
+
+  <div class="nut-row">
+    <input type="submit" value="Gửi thông tin (submit)" class="btn-sub">
+    <input type="reset" value="Nhập lại (reset)" class="btn-res">
+    <input type="button" value="Nút thường (button)" class="btn-nor" onclick="document.getElementById('xem-du-lieu').textContent='Nút type=button không tự gửi biểu mẫu!';">
+  </div>
+
+  <div id="xem-du-lieu" class="hop-kq">
+    Nhấn "Gửi thông tin (submit)" để quan sát các cặp <strong>name=giá_trị</strong> được gửi đi!
+  </div>
+</form>`,
+            css: `body { font-family: 'Be Vietnam Pro', sans-serif; background: #f4f6fb; padding: 16px; }
+
+.phieu-thi {
+  max-width: 520px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+h2 { margin: 0 0 12px; font-size: 17px; color: #4f46e5; }
+
+fieldset {
+  border: 1.5px solid #c7d2fe;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+legend { font-size: 12.5px; font-weight: 700; color: #4f46e5; padding: 0 6px; }
+label { display: block; font-size: 12.5px; font-weight: 600; color: #334155; margin: 6px 0 3px; }
+.opt { font-weight: 500; cursor: pointer; }
+
+input[type="text"], select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.nut-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.nut-row input { padding: 8px 12px; border-radius: 9px; font-weight: 700; font-size: 12.5px; border: none; cursor: pointer; }
+.btn-sub { background: #4f46e5; color: #ffffff; }
+.btn-res { background: #f1f5f9; color: #475569; }
+.btn-nor { background: #ecfdf5; color: #059669; }
+
+.hop-kq {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #0f172a;
+  word-break: break-all;
+}`
+          }
+        ]
+      },
+
+      /* ==================== LEVEL 4 (PHẦN 12–14) — 5 BÀI ==================== */
+      {
+        id: 'LEVEL_4',
+        name: 'LEVEL 4: Giới thiệu CSS, Bộ chọn & Thuộc tính CSS cơ bản (Phần 12–14)',
+        shortName: 'level4_css_coban.html',
+        notes: [
+          {
+            kind: 'remember',
+            title: 'GHI NHỚ — CSS, 3 cách áp dụng & Các bộ chọn cơ bản',
+            items: [
+              '<strong>CSS không phải là HTML:</strong> CSS (Cascading Style Sheets) là ngôn ngữ mô tả kiểu dáng độc lập. Cú pháp chuẩn: <code>bộ_chọn { thuộc_tính: giá_trị; }</code>.',
+              '<strong>3 cách áp dụng CSS:</strong> <em>Inline</em> (thuộc tính <code>style</code>), <em>Internal</em> (thẻ <code>&lt;style&gt;</code> trong <code>&lt;head&gt;</code>), <em>External</em> (tệp <code>.css</code> ngoài liên kết bằng <code>&lt;link rel="stylesheet" href="style.css"&gt;</code>).',
+              '<strong>6 bộ chọn cơ bản:</strong> Tên thẻ (<code>p</code>), Lớp (<code>.ten-lop</code> — dùng cho nhiều phần tử), Định danh (<code>#ten-id</code> — duy nhất 1 phần tử), Nhóm (<code>h1, h2</code>), Hậu duệ (<code>div p</code>), Toàn cục (<code>*</code>).'
+            ]
+          },
+          {
+            kind: 'tip',
+            title: 'MẸO LÀM BÀI — Tái sử dụng, Ưu tiên & So sánh class vs id',
+            items: [
+              '<strong>Khả năng tái sử dụng &amp; bảo trì:</strong> <code>Inline &lt; Internal &lt; External</code>. Nhưng về <strong>mức độ ưu tiên</strong> khi xung đột trên cùng phần tử: <code>Inline CSS</code> thắng <code>Internal/External CSS</code>.',
+              '<strong>class vs id:</strong> Một phần tử có thể mang nhiều <code>class</code> cùng lúc (<code>class="a b"</code>), còn <code>id</code> chỉ được mang 1 giá trị duy nhất trên toàn trang.',
+              '<strong>Nhớ cặp khoảng cách:</strong> <code>margin</code> = khoảng cách ra <strong>NGOÀI</strong> viền; <code>padding</code> = khoảng đệm vào <strong>TRONG</strong> viền.'
+            ]
+          },
+          {
+            kind: 'warning',
+            title: 'CẢNH BÁO LỖI — Các lỗi cú pháp CSS dễ mất điểm ở Level 4',
+            items: [
+              '<strong>Quên dấu chấm phẩy ( ; ):</strong> Phải kết thúc mỗi cặp <code>thuộc_tính: giá_trị;</code> bằng dấu chấm phẩy.',
+              '<strong>Dùng nhầm dấu bằng ( = ):</strong> CSS dùng dấu hai chấm (<code>color: red;</code>), KHÔNG dùng dấu bằng như HTML.',
+              '<strong>Thiếu đơn vị đo:</strong> Viết <code>font-size: 16</code> (thiếu <code>px</code>) sẽ bị trình duyệt bỏ qua toàn bộ dòng khai báo đó!'
+            ]
+          }
+        ],
+        exercises: [
+          {
+            title: 'Cú pháp CSS, 3 cách áp dụng & Mức ưu tiên',
+            difficulty: 'Cơ bản',
+            desc: 'Minh họa Inline CSS (thuộc tính style) thắng Internal CSS (<style>) trên cùng thẻ, kèm cú pháp <link rel="stylesheet" href="style.css">.',
+            html: `<div class="demo-uu-tien">
+  <h1>Định dạng bằng Internal CSS (trong tab CSS)</h1>
+
+  <!-- Inline CSS viết trực tiếp tại thẻ sẽ THẮNG màu xanh của thẻ h1 bên tab CSS -->
+  <h1 style="color: #dc2626; border-color: #dc2626;">
+    Cùng thẻ &lt;h1&gt; nhưng có Inline style &rarr; Màu đỏ THẮNG!
+  </h1>
+
+  <p>Đoạn văn này được áp dụng <code>text-indent: 18px;</code> từ Internal CSS để thụt lề dòng đầu tiên.</p>
+
+  <div class="box-ext">
+    <strong>Cách 3 — External CSS (khuyến nghị cho website nhiều trang):</strong><br>
+    Đặt thẻ <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> trong <code>&lt;head&gt;</code>.<br>
+    <em>Mức độ tái sử dụng: Inline &lt; Internal &lt; External.</em>
+  </div>
+</div>`,
+            css: `/* Internal CSS (hoặc External CSS) áp dụng theo bộ chọn */
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background-color: #f4f6fb;
+  padding: 20px;
+}
+
+.demo-uu-tien {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+p {
+  text-indent: 18px;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.7;
+}
+
+.box-ext {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #eef2ff;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #312e81;
+  line-height: 1.7;
+}`
+          },
+          {
+            title: 'Bộ chọn Tên thẻ, Lớp (.class) & Định danh (#id)',
+            difficulty: 'Cơ bản',
+            desc: 'Phân biệt bộ chọn thẻ p, lớp .canh-bao (dùng lại nhiều lần, ghép nhiều class) và định danh #tieu-de-chinh (duy nhất 1 phần tử).',
+            html: `<div class="khung-selector">
+  <!-- Bộ chọn #id: Duy nhất 1 phần tử trên trang -->
+  <h1 id="tieu-de-chinh">Cổng thông tin Lớp 11A1 — THPT B Nghĩa Hưng</h1>
+
+  <!-- Bộ chọn tên thẻ p -->
+  <p>Đoạn văn thường: nhận định dạng chung từ bộ chọn tên thẻ <code>p</code>.</p>
+
+  <!-- Bộ chọn .class: Có thể áp dụng cho nhiều phần tử khác nhau -->
+  <p class="canh-bao">Thông báo 1: Đừng quên nộp bài thực hành HTML/CSS đúng hạn!</p>
+
+  <!-- Một phần tử có thể ghép NHIỀU class cách nhau bằng dấu cách -->
+  <div class="canh-bao nen-vang">
+    Thông báo 2 (ghép 2 class: <code>class="canh-bao nen-vang"</code>): Lớp 11A1 kiểm tra 15 phút vào thứ Tư.
+  </div>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-selector {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* Bộ chọn định danh (#id) */
+#tieu-de-chinh {
+  font-size: 20px;
+  color: #4f46e5;
+  margin: 0 0 12px;
+}
+
+/* Bộ chọn tên thẻ (p) */
+p {
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Bộ chọn lớp (.class) */
+.canh-bao {
+  color: #dc2626;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-left: 4px solid #dc2626;
+  border-radius: 8px;
+  background: #fef2f2;
+  margin-top: 10px;
+  font-size: 13.5px;
+}
+
+/* Class thứ 2 dùng để ghép */
+.nen-vang {
+  background: #fffbeb;
+  border-left-color: #f59e0b;
+  color: #92400e;
+}`
+          },
+          {
+            title: 'Bộ chọn Nhóm (h1, h2), Hậu duệ (div p) & Toàn cục (*)',
+            difficulty: 'Trung bình',
+            desc: 'Sử dụng bộ chọn toàn cục *, bộ chọn nhóm h1, h2, h3 và bộ chọn hậu duệ .khung-tin p cho bảng tin Lớp 11A1.',
+            html: `<div class="bang-tin-11a1">
+  <h1>Bảng tin Lớp 11A1</h1>
+  <h2>Trường THPT B Nghĩa Hưng — Tỉnh Ninh Bình</h2>
+  <h3>Hoạt động tuần học mới</h3>
+
+  <div class="khung-tin">
+    <p>Đoạn văn nằm BÊN TRONG <code>.khung-tin</code> nên tự động in nghiêng nhờ bộ chọn hậu duệ <code>.khung-tin p</code>.</p>
+    <p>Học sinh Nguyễn Việt Hưng và nhóm thực hành web đạt điểm tối đa phần Bộ chọn CSS.</p>
+  </div>
+
+  <p class="ngoai">Đoạn văn nằm NGOÀI <code>.khung-tin</code> nên giữ chữ thẳng bình thường (không bị ảnh hưởng bởi <code>.khung-tin p</code>).</p>
+</div>`,
+            css: `/* Bộ chọn toàn cục (*) đặt box-sizing đồng nhất cho mọi phần tử */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+  margin: 0;
+}
+
+.bang-tin-11a1 {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* Bộ chọn nhóm: áp dụng chung cho cả h1, h2, h3 */
+h1, h2, h3 {
+  color: #1e3a8a;
+  margin: 0 0 8px;
+}
+
+h1 { font-size: 21px; }
+h2 { font-size: 15px; color: #4f46e5; }
+h3 { font-size: 14px; color: #10b981; }
+
+.khung-tin {
+  background: #eef2ff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+/* Bộ chọn hậu duệ: chỉ chọn các thẻ <p> nằm bên trong .khung-tin */
+.khung-tin p {
+  font-style: italic;
+  color: #312e81;
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin: 6px 0;
+}
+
+.ngoai {
+  font-size: 13.5px;
+  color: #475569;
+}`
+          },
+          {
+            title: 'Nhóm Màu sắc, Phông chữ & Văn bản trong CSS',
+            difficulty: 'Trung bình',
+            desc: 'Vận dụng color, background-color, font-family, font-size, font-weight, font-style, text-align, text-decoration, text-transform và line-height.',
+            html: `<article class="van-ban-css">
+  <span class="tieu-de-hoa">trường thpt b nghĩa hưng • tỉnh ninh bình</span>
+  <h1 class="tieu-de-viet-hoa-tu">bài viết thực hành định dạng văn bản css</h1>
+  <p class="doan-deu">
+    Nhờ sự kết hợp hài hòa giữa <strong>font-family</strong>, <strong>font-size</strong> và <strong>line-height</strong>,
+    văn bản trên trang web trở nên thoáng mắt, dễ đọc hơn trên cả màn hình máy tính lẫn điện thoại.
+    Thuộc tính <code>text-align: justify</code> giúp căn đều hai lề trái và phải thật gọn gàng.
+  </p>
+  <p class="gia-cu">Nội dung mẫu cũ (dùng text-decoration: line-through)</p>
+  <a href="#" class="link-sach">Liên kết đã bỏ gạch chân bằng text-decoration: none &rarr;</a>
+</article>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', Arial, sans-serif;
+  background-color: #f4f6fb;
+  padding: 20px;
+}
+
+.van-ban-css {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.tieu-de-hoa {
+  display: inline-block;
+  color: #4f46e5;
+  background-color: #eef2ff;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.tieu-de-viet-hoa-tu {
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin: 12px 0 10px;
+}
+
+.doan-deu {
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.85;
+  text-align: justify;
+}
+
+.gia-cu {
+  color: #94a3b8;
+  font-style: italic;
+  text-decoration: line-through;
+  font-size: 13px;
+}
+
+.link-sach {
+  display: inline-block;
+  margin-top: 6px;
+  color: #10b981;
+  font-weight: 700;
+  font-size: 13.5px;
+  text-decoration: none;
+}`
+          },
+          {
+            title: 'Nhóm Viền (border), Kích thước & Khoảng cách (margin vs padding)',
+            difficulty: 'Khá',
+            desc: 'Minh họa hộp thông báo .hop-thong-bao của Trường THPT B Nghĩa Hưng với 4 kiểu viền và so sánh trực quan margin vs padding.',
+            html: `<div class="khung-box">
+  <h2>Hộp thông báo &amp; Phân biệt margin / padding</h2>
+
+  <!-- Hộp thông báo chuẩn Ví dụ 14.1 Level 4 -->
+  <div class="hop-thong-bao">
+    <strong>Trường THPT B Nghĩa Hưng:</strong> Hộp này dùng <code>padding: 16px</code> (đẩy chữ vào trong cách viền) và <code>margin: 14px 0</code> (đẩy các hộp xung quanh ra ngoài).
+  </div>
+
+  <div class="luoi-vien">
+    <div class="o-vien vien-solid">border-style: solid</div>
+    <div class="o-vien vien-dashed">border-style: dashed</div>
+    <div class="o-vien vien-dotted">border-style: dotted</div>
+    <div class="o-vien vien-double">border-style: double</div>
+  </div>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background-color: #f4f6fb;
+  padding: 20px;
+}
+
+.khung-box {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h2 { margin: 0 0 12px; font-size: 18px; color: #0f172a; }
+
+.hop-thong-bao {
+  color: #1f4e79;
+  background-color: #dce6f1;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  border: 2px solid #1f4e79;
+  border-radius: 10px;
+  padding: 16px;      /* Khoảng đệm BÊN TRONG viền */
+  margin: 14px 0 18px;/* Khoảng cách BÊN NGOÀI viền */
+  text-align: left;
+}
+
+.luoi-vien {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.o-vien {
+  width: 46%;
+  height: 54px;
+  padding: 14px 10px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.vien-solid  { border: 2px solid #4f46e5; }
+.vien-dashed { border: 2px dashed #10b981; }
+.vien-dotted { border: 2px dotted #f59e0b; }
+.vien-double { border: 4px double #7c3aed; }`
+          }
+        ]
+      },
+
+      /* ==================== LEVEL 5 (MỞ RỘNG FLEXBOX) — 3 BÀI ==================== */
+      {
+        id: 'LEVEL_5_FLEXBOX',
+        name: 'LEVEL 5 (Mở rộng): Bố cục hiện đại Flexbox (3 bài thực hành)',
+        shortName: 'level5_flexbox_bnh.html',
+        notes: [
+          {
+            kind: 'remember',
+            title: 'GHI NHỚ — Tư duy bố cục Flexbox hiện đại',
+            items: [
+              'Đặt <code>display: flex;</code> lên phần tử <strong>cha (flex container)</strong> để các phần tử con tự xếp linh hoạt trên cùng một hàng.',
+              '<code>justify-content</code> căn chỉnh theo trục chính (<code>space-between</code>, <code>center</code>); <code>align-items</code> căn chỉnh theo trục vuông góc (<code>center</code>).',
+              'Dùng <code>flex-wrap: wrap;</code> cùng <code>gap</code> để lưới thẻ tự động xuống dòng đẹp mắt trên màn hình điện thoại.'
+            ]
+          },
+          {
+            kind: 'tip',
+            title: 'MẸO LÀM BÀI — Kiểm tra Responsive ngay trên BNH_HMTL_CSS',
+            items: [
+              'Nhấn biểu tượng <strong>Điện thoại (Mobile 375px)</strong> ở thanh công cụ cột trái để kiểm tra xem Navbar và lưới thẻ có tự co giãn mà không bị tràn màn hình hay không.',
+              'Dùng <code>flex: 1 1 180px;</code> cho các thẻ con để chúng chia đều chiều ngang khi rộng và tự xuống hàng khi hẹp dưới 180px.'
+            ]
+          },
+          {
+            kind: 'warning',
+            title: 'CẢNH BÁO LỖI — Lỗi thường gặp khi dùng Flexbox',
+            items: [
+              'Quên đặt <code>flex-wrap: wrap;</code> làm các thẻ bị ép bẹp hoặc tràn ngang trên màn hình nhỏ.',
+              'Đặt <code>justify-content</code> lên phần tử CON thay vì phần tử CHA (flex container) sẽ không có tác dụng.'
+            ]
+          }
+        ],
+        exercises: [
+          {
+            title: 'Thanh điều hướng (Navbar) bằng Flexbox',
+            difficulty: 'Khá',
+            desc: 'Dùng display: flex, justify-content: space-between và align-items: center dựng thanh menu Website Trường THPT B Nghĩa Hưng.',
+            html: `<header class="navbar">
+  <div class="brand">
+    <span class="logo">BNH</span>
+    <strong>THPT B Nghĩa Hưng</strong>
+  </div>
+  <nav class="menu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Giới thiệu</a>
+    <a href="#">Lớp 11A1</a>
+    <a href="#" class="nut-portal">Cổng học sinh</a>
+  </nav>
+</header>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+  padding: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #ffffff;
+  padding: 14px 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; color: #0f172a; font-size: 15px; }
+.logo {
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.menu { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.menu a { text-decoration: none; color: #475569; font-size: 13px; font-weight: 600; }
+.menu a:hover { color: #4f46e5; }
+.menu .nut-portal { background: #10b981; color: #ffffff; padding: 8px 14px; border-radius: 10px; }`
+          },
+          {
+            title: 'Lưới thẻ tin tức CLB Tin học 11A1 (Flex Wrap)',
+            difficulty: 'Khá',
+            desc: 'Xếp lưới 3 thẻ tin tức CLB Tin học 11A1 tự co giãn với flex-wrap: wrap, gap và flex: 1 1 170px.',
+            html: `<h2 class="tieu-de">Tin tức CLB Tin học 11A1 — Trường THPT B Nghĩa Hưng</h2>
+<div class="luoi-tin">
+  <article class="the-tin">
+    <span class="nhan">LEVEL 1–2</span>
+    <h3>Học HTML5 qua dự án hồ sơ cá nhân</h3>
+    <p>Nguyễn Việt Hưng và các bạn lớp 11A1 hoàn thành trang giới thiệu bản thân chuẩn cấu trúc DOM.</p>
+  </article>
+  <article class="the-tin">
+    <span class="nhan mint">LEVEL 3</span>
+    <h3>Thiết kế Biểu mẫu &amp; Iframe CLB</h3>
+    <p>Tự tay xây dựng phiếu đăng ký CLB Tin học và khung xem trước nội dung tương tác.</p>
+  </article>
+  <article class="the-tin">
+    <span class="nhan tim">LEVEL 4–5</span>
+    <h3>Làm chủ CSS &amp; Flexbox</h3>
+    <p>Nâng cấp giao diện hiện đại, tương thích cả màn hình máy tính và điện thoại.</p>
+  </article>
+</div>`,
+            css: `body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #f4f6fb;
+  padding: 20px;
+}
+
+.tieu-de { margin: 0 0 14px; font-size: 18px; color: #0f172a; }
+
+.luoi-tin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.the-tin {
+  flex: 1 1 170px;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.nhan {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+.nhan.mint { background: #ecfdf5; color: #059669; }
+.nhan.tim { background: #f5f3ff; color: #7c3aed; }
+
+h3 { margin: 10px 0 6px; font-size: 14.5px; color: #0f172a; }
+p { margin: 0; font-size: 13px; color: #475569; line-height: 1.6; }`
+          },
+          {
+            title: 'Trang chủ mini Trường THPT B Nghĩa Hưng',
+            difficulty: 'Nâng cao',
+            desc: 'Tổng hợp Navbar, Banner Flexbox, 2 cột thông tin và Footer bản quyền Trường THPT B Nghĩa Hưng.',
+            html: `<div class="mini-site">
+  <header class="top-bar">
+    <strong>🏫 THPT B NGHĨA HƯNG</strong>
+    <nav>
+      <a href="#">Giới thiệu</a>
+      <a href="#">Tin học 11A1</a>
+      <a href="#">Liên hệ</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Chào mừng đến với Trường THPT B Nghĩa Hưng</h1>
+    <p>Tỉnh Ninh Bình &bull; Đổi mới sáng tạo cùng phòng thực hành ảo BNH_HMTL_CSS.</p>
+  </section>
+
+  <main class="noi-dung">
+    <div class="cot-trai">
+      <h3>Góc học sinh tiêu biểu</h3>
+      <p><strong>Nguyễn Việt Hưng (Lớp 11A1):</strong> Hoàn thành xuất sắc 5 chuyên đề thực hành HTML5 &amp; CSS3.</p>
+    </div>
+    <aside class="cot-phai">
+      <h3>Thông báo nhanh</h3>
+      <p>Khai giảng CLB Tin học &amp; Lập trình năm học 2026 - 2027.</p>
+    </aside>
+  </main>
+
+  <footer class="chan-trang">
+    &copy; 2026 Trường THPT B Nghĩa Hưng &bull; Giáo viên: Nguyễn Quốc An - Tỉnh Ninh Bình
+  </footer>
+</div>`,
+            css: `body { font-family: 'Be Vietnam Pro', sans-serif; background: #f4f6fb; margin: 0; padding: 14px; }
+
+.mini-site {
+  max-width: 660px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 18px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: #4f46e5;
+}
+
+.top-bar nav { display: flex; gap: 12px; }
+.top-bar a { text-decoration: none; color: #475569; font-weight: 600; font-size: 12.5px; }
+
+.hero {
+  background: linear-gradient(135deg, #4f46e5, #10b981);
+  color: #ffffff;
+  text-align: center;
+  padding: 26px 20px;
+}
+
+.hero h1 { margin: 0 0 6px; font-size: 20px; }
+.hero p { margin: 0; font-size: 13px; opacity: 0.92; }
+
+.noi-dung { display: flex; flex-wrap: wrap; gap: 14px; padding: 18px; }
+.cot-trai { flex: 2 1 240px; background: #f8fafc; padding: 14px; border-radius: 12px; }
+.cot-phai { flex: 1 1 160px; background: #eef2ff; padding: 14px; border-radius: 12px; }
+h3 { margin: 0 0 6px; font-size: 14px; color: #312e81; }
+p { margin: 0; font-size: 13px; color: #475569; line-height: 1.65; }
+
+.chan-trang {
+  background: #0f172a;
+  color: #cbd5e1;
+  text-align: center;
+  padding: 11px 16px;
+  font-size: 11.5px;
+}`
+          }
+        ]
+      }
+    ];
+
+    /*************************************************************************
+     * 4. TRẠNG THÁI ỨNG DỤNG
+     *************************************************************************/
+    const state = {
+      lessonIndex: 0,
+      exerciseIndex: 0,
+      editorMode: 'html',       // 'html' | 'css' | 'split'
+      leftTab: 'preview',       // 'preview' | 'dom' | 'notes'
+      previewDevice: 'desktop', // 'desktop' | 'mobile'
+      isDarkEditor: false,
+      autoRun: true,
+      searchQuery: '',
+      htmlCode: '',
+      cssCode: '',
+      isAiLoading: false,
+      customApiKey: localStorage.getItem('bnh_gemini_api_key') || '',
+    };
+
+    let cmHtml = null;
+    let cmCss = null;
+    let debounceTimer = null;
+    let cachedDomRows = [];
+    let cachedStructureItems = [];
+    const els = {};
+
+    /*************************************************************************
+     * 5. HÀM TIỆN ÍCH (TOAST, CLIPBOARD, FORMAT, BUILD HTML5 DOCUMENT)
+     *************************************************************************/
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colorMap = {
+        info: 'bg-slate-900 text-white border-slate-700',
+        success: 'bg-emerald-600 text-white border-emerald-500',
+        warning: 'bg-amber-600 text-white border-amber-500',
+        error: 'bg-rose-600 text-white border-rose-500',
+      };
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 ${colorMap[type] || colorMap.info}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    function copyTextToClipboard(text, successMsg = 'Đã sao chép vào bộ nhớ tạm!') {
+      try {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        temp.style.position = 'fixed';
+        temp.style.opacity = '0';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(temp);
+        if (ok) showToast(successMsg, 'success');
+        else showToast('Không thể sao chép tự động, vui lòng nhấn Ctrl+C.', 'warning');
+      } catch {
+        showToast('Không thể sao chép tự động.', 'error');
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Ghép tài liệu HTML5 hoàn chỉnh dùng để xuất tệp .html (bản quyền chuẩn theo yêu cầu)
+    function buildExportHtmlDocument(html, css, title = 'Bài thực hành BNH_HMTL_CSS') {
+      const safeCss = css.trim();
+      const safeHtml = html.trim();
+      return `<!DOCTYPE html>
+<!-- © 2026 Trường THPT B Nghĩa Hưng | Giáo viên: Nguyễn Quốc An - THPT B Nghĩa Hưng - Tỉnh Ninh Bình | BNH_HMTL_CSS -->
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} — Trường THPT B Nghĩa Hưng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+${safeCss.split('\n').map(line => '    ' + line).join('\n')}
+  </style>
+</head>
+<body>
+${safeHtml.split('\n').map(line => '  ' + line).join('\n')}
+</body>
+</html>`;
+    }
+
+    // Ghép tài liệu HTML5 dùng cho iframe xem trước (bổ sung hỗ trợ submit inspector & iframe data: link an toàn 100%)
+    function buildPreviewHtmlDocument(html, css, title) {
+      const baseDoc = buildExportHtmlDocument(html, css, title);
+      const previewHelperScript = `
+  <script>
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[target]');
+      if (!a) return;
+      var targetName = a.getAttribute('target');
+      var href = a.getAttribute('href') || '';
+      if (targetName && targetName !== '_blank' && targetName !== '_self' && href.indexOf('data:text/html') === 0) {
+        var frame = document.querySelector('iframe[name="' + targetName + '"]');
+        if (frame) {
+          e.preventDefault();
+          var commaIdx = href.indexOf(',');
+          if (commaIdx !== -1) {
+            frame.srcdoc = decodeURIComponent(href.slice(commaIdx + 1));
+          }
+        }
+      }
+    });
+
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (form && form.getAttribute('data-inspect-submit') === 'true') {
+        e.preventDefault();
+        var fd = new FormData(form);
+        var pairs = [];
+        fd.forEach(function (val, key) {
+          pairs.push(key + '=' + val);
+        });
+        var box = document.getElementById('xem-du-lieu');
+        if (box) {
+          box.innerHTML = '<strong>✓ Dữ liệu biểu mẫu gửi đi:</strong><br>' + (pairs.length ? pairs.join(' &amp; ') : '(Không có dữ liệu nào được chọn)');
+        }
+      }
+    });
+  <\/script>`;
+      return baseDoc.replace('</body>', previewHelperScript + '\n</body>');
+    }
+
+    // Format mã HTML chuẩn thụt lề 2 dấu cách
+    function formatHtmlCode(raw) {
+      const voidTags = new Set(['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']);
+      const cleaned = raw.replace(/>\s+</g, '><').trim();
+      if (!cleaned) return '';
+
+      const tokens = cleaned.match(/<!--[\s\S]*?-->|<\/?[^>]+>|[^<]+/g) || [];
+      let indent = 0;
+      const lines = [];
+
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i].trim();
+        if (!token) continue;
+
+        const isClosing = /^<\//.test(token);
+        const isComment = /^<!--/.test(token);
+        const isTag = /^</.test(token) && !isComment;
+        const tagMatch = token.match(/^<\/?\s*([a-zA-Z0-9-]+)/);
+        const tagName = tagMatch ? tagMatch[1].toLowerCase() : '';
+        const isSelfClosing = /\/>$/.test(token) || voidTags.has(tagName);
+
+        if (isTag && !isClosing && !isSelfClosing && i + 2 < tokens.length) {
+          const nextText = tokens[i + 1];
+          const closeTag = tokens[i + 2];
+          if (nextText && !nextText.startsWith('<') && closeTag === `</${tagName}>` && nextText.trim().length < 78) {
+            lines.push('  '.repeat(indent) + token + nextText.trim() + closeTag);
+            i += 2;
+            continue;
+          }
+        }
+
+        if (isClosing) {
+          indent = Math.max(0, indent - 1);
+          lines.push('  '.repeat(indent) + token);
+        } else if (isTag && !isSelfClosing) {
+          lines.push('  '.repeat(indent) + token);
+          indent++;
+        } else {
+          lines.push('  '.repeat(indent) + token);
+        }
+      }
+      return lines.join('\n');
+    }
+
+    // Format mã CSS chuẩn gọn
+    function formatCssCode(raw) {
+      if (!raw.trim()) return '';
+      const css = raw
+        .replace(/\r\n/g, '\n')
+        .replace(/\s*{\s*/g, ' {\n')
+        .replace(/;\s*/g, ';\n')
+        .replace(/\s*}\s*/g, '\n}\n\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      const lines = css.split('\n');
+      let indent = 0;
+      const formatted = [];
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          if (formatted.length && formatted[formatted.length - 1] !== '') formatted.push('');
+          continue;
+        }
+        if (trimmed.startsWith('}')) indent = Math.max(0, indent - 1);
+        const prettyLine = trimmed.includes(':') && !trimmed.endsWith('{') && !trimmed.startsWith('/*')
+          ? trimmed.replace(/\s*:\s*/, ': ')
+          : trimmed;
+        formatted.push('  '.repeat(indent) + prettyLine);
+        if (trimmed.endsWith('{')) indent++;
+      }
+      return formatted.join('\n').trim();
+    }
+
+    /*************************************************************************
+     * 6. PHÂN TÍCH THẺ HTML DOM, BỘ CHỌN CSS & RENDER TAB GHI NHỚ LEVEL
+     *************************************************************************/
+    function analyzeCodeStructure() {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(state.htmlCode || '', 'text/html');
+      const allElements = Array.from(doc.body.querySelectorAll('*'));
+
+      // 1. Bảng 5 cột Phân tích thẻ DOM
+      cachedDomRows = allElements.map((el, idx) => {
+        const tag = el.tagName.toLowerCase();
+        const meta = HTML_TAG_META[tag] || { badge: 'HTML', desc: `Phần tử HTML <${tag}>.` };
+        const idStr = el.id ? `#${el.id}` : '';
+        const classStr = el.className && typeof el.className === 'string'
+          ? el.className.trim().split(/\s+/).filter(Boolean).map(c => `.${c}`).join(' ')
+          : '';
+        const selectorInfo = [idStr, classStr].filter(Boolean).join(' ') || '—';
+
+        const otherAttrs = Array.from(el.attributes)
+          .filter(a => a.name !== 'id' && a.name !== 'class')
+          .map(a => {
+            const val = a.value.length > 26 ? a.value.slice(0, 26) + '…' : a.value;
+            return val ? `${a.name}="${val}"` : a.name;
+          })
+          .join(', ');
+
+        let summary = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!summary && el.getAttribute('alt')) summary = `[alt: ${el.getAttribute('alt')}]`;
+        else if (!summary && el.getAttribute('placeholder')) summary = `[placeholder: ${el.getAttribute('placeholder')}]`;
+        else if (!summary && el.getAttribute('value')) summary = `[value: ${el.getAttribute('value')}]`;
+        if (summary.length > 44) summary = summary.slice(0, 44) + '…';
+
+        return {
+          index: idx + 1,
+          tag,
+          meta,
+          selectorInfo,
+          summary: summary || '(Phần tử rỗng / không văn bản)',
+          attrs: otherAttrs || '—',
+        };
+      });
+
+      // 2. Đếm thẻ HTML
+      const tagCounts = new Map();
+      cachedDomRows.forEach(row => {
+        tagCounts.set(row.tag, (tagCounts.get(row.tag) || 0) + 1);
+      });
+
+      // 3. Quét bộ chọn CSS và thuộc tính tiêu biểu
+      const cssClean = (state.cssCode || '').replace(/\/\*[\s\S]*?\*\//g, '');
+      const ruleRegex = /([^{}]+)\{([^{}]*)\}/g;
+      let match;
+      const selectorCounts = new Map();
+      const propsFound = new Set();
+
+      while ((match = ruleRegex.exec(cssClean)) !== null) {
+        const rawSelectors = match[1].trim();
+        const body = match[2].trim();
+        if (rawSelectors && !rawSelectors.startsWith('@')) {
+          rawSelectors.split(',').forEach(s => {
+            const cleanSel = s.trim();
+            if (cleanSel) selectorCounts.set(cleanSel, (selectorCounts.get(cleanSel) || 0) + 1);
+          });
+          body.split(';').forEach(decl => {
+            const prop = decl.split(':')[0]?.trim().toLowerCase();
+            if (prop && CSS_PROP_META[prop]) propsFound.add(prop);
+          });
+        }
+      }
+
+      const items = [];
+      const voidSet = new Set(['br', 'hr', 'img', 'input', 'source', 'meta', 'link']);
+      const primaryTags = new Set(['h1', 'table', 'form', 'iframe', 'video', 'audio', 'img', 'header', 'footer']);
+
+      tagCounts.forEach((count, tag) => {
+        const meta = HTML_TAG_META[tag] || { badge: 'HTML', desc: `Phần tử <${tag}> trong trang web.` };
+        const label = voidSet.has(tag) ? `<${tag} />` : `<${tag}>`;
+        items.push({
+          kind: 'html',
+          isPrimary: primaryTags.has(tag),
+          label,
+          count,
+          sub: meta.badge,
+          desc: `<strong>Thẻ ${escapeHtml(label)} [${meta.badge} — ${count} lần]:</strong> ${meta.desc}`,
+          searchKey: `${tag} ${meta.badge} ${meta.desc}`.toLowerCase(),
+        });
+      });
+
+      Array.from(selectorCounts.entries())
+        .filter(([sel]) => sel.startsWith('.') || sel.startsWith('#') || sel === '*')
+        .slice(0, 6)
+        .forEach(([sel, count]) => {
+          const isId = sel.startsWith('#');
+          const isAll = sel === '*';
+          const badge = isAll ? 'TOÀN CỤC' : (isId ? 'ID' : 'CLASS');
+          items.push({
+            kind: 'selector',
+            isPrimary: false,
+            label: sel,
+            count,
+            sub: badge,
+            desc: isAll
+              ? `<strong>Bộ chọn toàn cục <code>*</code>:</strong> Áp dụng định dạng cho TẤT CẢ phần tử trên trang.`
+              : isId
+                ? `<strong>Bộ chọn định danh <code>${escapeHtml(sel)}</code> [ID]:</strong> Chỉ áp dụng cho DUY NHẤT một phần tử có <code>id="${escapeHtml(sel.slice(1))}"</code>.`
+                : `<strong>Bộ chọn lớp <code>${escapeHtml(sel)}</code> [CLASS]:</strong> Áp dụng cho nhiều phần tử có gắn lớp <code>${escapeHtml(sel)}</code>.`,
+            searchKey: `${sel} ${badge} css`.toLowerCase(),
+          });
+        });
+
+      Array.from(propsFound).slice(0, 4).forEach(prop => {
+        items.push({
+          kind: 'css',
+          isPrimary: false,
+          label: prop,
+          count: 1,
+          sub: 'CSS',
+          desc: `<strong>Thuộc tính CSS <code>${prop}</code>:</strong> ${CSS_PROP_META[prop]}`,
+          searchKey: `${prop} css ${CSS_PROP_META[prop]}`.toLowerCase(),
+        });
+      });
+
+      cachedStructureItems = items;
+      els.badgeTagCount.textContent = cachedDomRows.length;
+      els.previewDomPill.textContent = `${cachedDomRows.length} DOM`;
+      els.structureCounter.textContent = `${cachedDomRows.length} phần tử DOM • ${selectorCounts.size} bộ chọn CSS`;
+
+      renderStructurePills();
+      renderDomTable();
+    }
+
+    function renderStructurePills() {
+      const q = state.searchQuery.trim().toLowerCase();
+      const filtered = q ? cachedStructureItems.filter(it => it.searchKey.includes(q)) : cachedStructureItems;
+
+      els.structurePills.innerHTML = '';
+      if (!filtered.length) {
+        els.structurePills.innerHTML = `<span class="text-xs italic text-slate-400 py-1">Không tìm thấy thẻ HTML hoặc bộ chọn CSS khớp từ khóa.</span>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const countBadge = item.count > 1 ? ` ×${item.count}` : '';
+
+        if (item.isPrimary) {
+          btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-amber-50 hover:bg-amber-100/80 border border-amber-300/90 text-amber-800 transition cursor-pointer';
+          btn.innerHTML = `<svg class="w-3 h-3 text-amber-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg><span>${escapeHtml(item.label)}</span><span class="text-[10px] font-sans font-semibold text-amber-600/90">[${escapeHtml(item.sub)}${countBadge}]</span>`;
+        } else if (item.kind === 'selector' || item.kind === 'css') {
+          btn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold bg-white hover:bg-violet-50 border border-slate-200 hover:border-violet-300 text-slate-700 hover:text-violet-700 transition cursor-pointer';
+          btn.innerHTML = `<span>${escapeHtml(item.label)}</span><span class="text-[10px] font-sans font-medium text-violet-500">[${escapeHtml(item.sub)}${countBadge}]</span>`;
+        } else {
+          btn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-700 hover:text-[#4f46e5] transition cursor-pointer';
+          btn.innerHTML = `<span>${escapeHtml(item.label)}</span><span class="text-[10px] font-sans font-medium text-slate-400">[${escapeHtml(item.sub)}${countBadge}]</span>`;
+        }
+
+        btn.addEventListener('click', () => {
+          els.pillTooltipText.innerHTML = item.desc;
+          els.pillTooltipBox.classList.remove('hidden');
+        });
+
+        els.structurePills.appendChild(btn);
+      });
+    }
+
+    function renderDomTable() {
+      const q = state.searchQuery.trim().toLowerCase();
+      const rows = q
+        ? cachedDomRows.filter(r =>
+            r.tag.includes(q) ||
+            r.selectorInfo.toLowerCase().includes(q) ||
+            r.summary.toLowerCase().includes(q) ||
+            r.attrs.toLowerCase().includes(q)
+          )
+        : cachedDomRows;
+
+      if (!rows.length) {
+        els.domTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-10 text-center text-slate-400 italic">
+              Không có phần tử DOM nào khớp với từ khóa lọc.
+            </td>
+          </tr>`;
+        return;
+      }
+
+      els.domTableBody.innerHTML = rows.map(r => `
+        <tr class="hover:bg-indigo-50/40 transition-colors">
+          <td class="py-2.5 px-3 text-center font-mono font-bold text-[#4f46e5]">${r.index}</td>
+          <td class="py-2.5 px-3 whitespace-nowrap">
+            <span class="font-mono font-bold text-slate-800">&lt;${escapeHtml(r.tag)}&gt;</span>
+            <span class="block text-[10px] font-semibold text-slate-400">${escapeHtml(r.meta.badge)}</span>
+          </td>
+          <td class="py-2.5 px-3 font-mono text-[11.5px] text-violet-700">${escapeHtml(r.selectorInfo)}</td>
+          <td class="py-2.5 px-3 text-slate-600 max-w-[180px] truncate" title="${escapeHtml(r.summary)}">${escapeHtml(r.summary)}</td>
+          <td class="py-2.5 px-3 font-mono text-[11px] text-emerald-700 max-w-[165px] truncate" title="${escapeHtml(r.attrs)}">${escapeHtml(r.attrs)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderLevelNotes() {
+      const lesson = LESSONS[state.lessonIndex];
+      const q = state.searchQuery.trim().toLowerCase();
+      const notes = lesson.notes || [];
+
+      const styleMap = {
+        remember: {
+          wrap: 'bg-indigo-50/75 border-indigo-200/90',
+          title: 'text-[#4f46e5]',
+          badge: 'bg-[#4f46e5] text-white',
+          icon: '📘',
+        },
+        tip: {
+          wrap: 'bg-emerald-50/75 border-emerald-200/90',
+          title: 'text-emerald-800',
+          badge: 'bg-[#10b981] text-white',
+          icon: '💡',
+        },
+        warning: {
+          wrap: 'bg-amber-50/85 border-amber-200/90',
+          title: 'text-amber-900',
+          badge: 'bg-amber-500 text-white',
+          icon: '⚠️',
+        },
+      };
+
+      const filteredNotes = notes.map(n => ({
+        ...n,
+        items: q ? n.items.filter(it => it.toLowerCase().includes(q) || n.title.toLowerCase().includes(q)) : n.items
+      })).filter(n => n.items.length > 0);
+
+      if (!filteredNotes.length) {
+        els.panelNotes.innerHTML = `<div class="py-10 text-center text-xs italic text-slate-400">Không tìm thấy ghi nhớ phù hợp với từ khóa "${escapeHtml(state.searchQuery)}".</div>`;
+        return;
+      }
+
+      els.panelNotes.innerHTML = `
+        <div class="flex items-center justify-between gap-2 pb-1">
+          <h3 class="text-xs font-extrabold uppercase tracking-wide text-slate-700">${escapeHtml(lesson.name)}</h3>
+          <span class="text-[11px] font-semibold text-[#4f46e5] bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100">Chuẩn kiến thức THPT</span>
+        </div>
+      ` + filteredNotes.map(note => {
+        const st = styleMap[note.kind] || styleMap.remember;
+        return `
+          <div class="rounded-2xl border p-3.5 shadow-xs ${st.wrap}">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-sm">${st.icon}</span>
+              <h4 class="text-xs sm:text-[13px] font-extrabold ${st.title}">${escapeHtml(note.title)}</h4>
+            </div>
+            <ul class="space-y-1.5 pl-4 list-disc text-xs text-slate-700 leading-relaxed">
+              ${note.items.map(it => `<li>${it}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /*************************************************************************
+     * 7. CẬP NHẬT KHUNG XEM TRƯỚC & BỘ ĐẾM TỪ / KÝ TỰ
+     *************************************************************************/
+    function updateCodeStats() {
+      let targetText = '';
+      if (state.editorMode === 'html') targetText = state.htmlCode;
+      else if (state.editorMode === 'css') targetText = state.cssCode;
+      else targetText = (state.htmlCode + ' ' + state.cssCode).trim();
+
+      const words = targetText.trim() ? targetText.trim().split(/\s+/).length : 0;
+      const chars = targetText.length;
+      els.codeStatsBadge.textContent = `${words} từ • ${chars} ký tự`;
+    }
+
+    function runPreview(showNotice = false) {
+      const lesson = LESSONS[state.lessonIndex];
+      const exercise = lesson.exercises[state.exerciseIndex];
+
+      const exportDoc = buildExportHtmlDocument(state.htmlCode, state.cssCode, exercise.title);
+      const previewDoc = buildPreviewHtmlDocument(state.htmlCode, state.cssCode, exercise.title);
+
+      els.livePreviewFrame.srcdoc = previewDoc;
+      els.fullHtmlPreviewCode.textContent = exportDoc;
+      els.previewAddressBar.textContent = `${lesson.shortName} — Bài #${state.exerciseIndex + 1}`;
+
+      const timeStr = new Date().toTimeString().slice(0, 8);
+      els.lastRunTime.textContent = `Cập nhật ${timeStr}`;
+
+      analyzeCodeStructure();
+      updateCodeStats();
+
+      if (showNotice) {
+        showToast(`Đã chạy mã thành công (${timeStr})`, 'success');
+      }
+    }
+
+    function scheduleAutoRun() {
+      updateCodeStats();
+      if (!state.autoRun) return;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => runPreview(false), 260);
+    }
+
+    /*************************************************************************
+     * 8. TRÌNH SOẠN THẢO CODEMIRROR & CHUYỂN CHẾ ĐỘ
+     *************************************************************************/
+    function initEditors() {
+      if (typeof CodeMirror !== 'undefined') {
+        const commonOpts = {
+          lineNumbers: true,
+          tabSize: 2,
+          indentUnit: 2,
+          lineWrapping: true,
+          autoCloseTags: true,
+          autoCloseBrackets: true,
+          theme: state.isDarkEditor ? 'material-darker' : 'default',
+          extraKeys: {
+            'Ctrl-Enter': () => runPreview(true),
+            'Cmd-Enter': () => runPreview(true),
+          },
+        };
+
+        cmHtml = CodeMirror.fromTextArea(els.htmlTextarea, { ...commonOpts, mode: 'htmlmixed' });
+        cmCss = CodeMirror.fromTextArea(els.cssTextarea, { ...commonOpts, mode: 'css' });
+
+        cmHtml.on('change', () => {
+          state.htmlCode = cmHtml.getValue();
+          scheduleAutoRun();
+        });
+        cmCss.on('change', () => {
+          state.cssCode = cmCss.getValue();
+          scheduleAutoRun();
+        });
+      } else {
+        els.htmlTextarea.addEventListener('input', e => { state.htmlCode = e.target.value; scheduleAutoRun(); });
+        els.cssTextarea.addEventListener('input', e => { state.cssCode = e.target.value; scheduleAutoRun(); });
+        [els.htmlTextarea, els.cssTextarea].forEach(ta => {
+          ta.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+              e.preventDefault();
+              runPreview(true);
+            }
+          });
+        });
+      }
+    }
+
+    function setEditorValues(html, css) {
+      state.htmlCode = html;
+      state.cssCode = css;
+      if (cmHtml && cmCss) {
+        cmHtml.setValue(html);
+        cmCss.setValue(css);
+        setTimeout(() => { cmHtml.refresh(); cmCss.refresh(); }, 20);
+      } else {
+        els.htmlTextarea.value = html;
+        els.cssTextarea.value = css;
+      }
+      runPreview(false);
+    }
+
+    function switchEditorMode(mode) {
+      state.editorMode = mode;
+
+      [
+        { id: 'html', btn: els.modeHtml },
+        { id: 'css', btn: els.modeCss },
+        { id: 'split', btn: els.modeSplit },
+      ].forEach(m => {
+        m.btn.className = m.id === mode
+          ? 'px-2.5 py-1 rounded-lg bg-white text-[#4f46e5] shadow-xs transition cursor-pointer'
+          : 'px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer';
+      });
+
+      if (mode === 'html') {
+        els.editorsGrid.className = 'grid grid-cols-1 h-[285px]';
+        els.htmlEditorContainer.classList.remove('hidden');
+        els.cssEditorContainer.classList.add('hidden');
+        els.htmlSplitLabel.classList.add('hidden');
+        els.cssSplitLabel.classList.add('hidden');
+      } else if (mode === 'css') {
+        els.editorsGrid.className = 'grid grid-cols-1 h-[285px]';
+        els.htmlEditorContainer.classList.add('hidden');
+        els.cssEditorContainer.classList.remove('hidden');
+        els.htmlSplitLabel.classList.add('hidden');
+        els.cssSplitLabel.classList.add('hidden');
+      } else {
+        els.editorsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 h-[340px] sm:h-[295px] divide-y sm:divide-y-0 sm:divide-x divide-slate-200';
+        els.htmlEditorContainer.classList.remove('hidden');
+        els.cssEditorContainer.classList.remove('hidden');
+        els.htmlSplitLabel.classList.remove('hidden');
+        els.cssSplitLabel.classList.remove('hidden');
+      }
+
+      if (cmHtml && cmCss) {
+        setTimeout(() => { cmHtml.refresh(); cmCss.refresh(); }, 25);
+      }
+      updateCodeStats();
+    }
+
+    function switchLeftTab(tabName) {
+      state.leftTab = tabName;
+      const activeCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-[#4f46e5] text-white shadow-sm shadow-indigo-500/25';
+      const inactiveCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200/70';
+
+      els.tabPreview.className = tabName === 'preview' ? activeCls : inactiveCls;
+      els.tabDom.className = tabName === 'dom' ? activeCls : inactiveCls;
+      els.tabNotes.className = tabName === 'notes' ? activeCls : inactiveCls;
+
+      els.badgeTagCount.className = tabName === 'preview'
+        ? 'px-1.5 py-0.5 text-[10px] rounded-full bg-white/25 text-white font-extrabold'
+        : 'px-1.5 py-0.5 text-[10px] rounded-full bg-indigo-100 text-[#4f46e5] font-extrabold';
+
+      els.panelPreview.classList.toggle('hidden', tabName !== 'preview');
+      els.panelDom.classList.toggle('hidden', tabName !== 'dom');
+      els.panelNotes.classList.toggle('hidden', tabName !== 'notes');
+    }
+
+    /*************************************************************************
+     * 9. QUẢN LÝ 5 LEVEL & 23 BÀI TẬP
+     *************************************************************************/
+    function populateLessonDropdown() {
+      els.lessonSelect.innerHTML = LESSONS.map((lesson, i) =>
+        `<option value="${i}">${escapeHtml(lesson.name)}</option>`
+      ).join('');
+    }
+
+    function renderExerciseList() {
+      const lesson = LESSONS[state.lessonIndex];
+      els.exerciseListTitle.textContent = `GỢI Ý BÀI TẬP THỰC HÀNH (${lesson.exercises.length}):`;
+      els.exerciseList.innerHTML = '';
+
+      const diffStyle = {
+        'Cơ bản': 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
+        'Trung bình': 'bg-amber-50 text-amber-700 border-amber-200/80',
+        'Khá': 'bg-indigo-50 text-[#4f46e5] border-indigo-200/80',
+        'Nâng cao': 'bg-rose-50 text-rose-700 border-rose-200/80',
+      };
+
+      lesson.exercises.forEach((ex, idx) => {
+        const isActive = idx === state.exerciseIndex;
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
+          isActive
+            ? 'bg-indigo-50/75 border-[#4f46e5] ring-2 ring-indigo-500/15 shadow-xs'
+            : 'bg-white border-slate-200/90 hover:border-indigo-300 hover:bg-slate-50/70'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-1">
+            <div class="text-xs sm:text-[13px] font-bold text-slate-800 leading-snug">
+              <span class="font-mono text-[#4f46e5] mr-1.5">#${idx + 1}</span>
+              <span>${escapeHtml(ex.title)}</span>
+            </div>
+            <span class="shrink-0 px-2 py-0.5 rounded-md border text-[10.5px] font-bold ${diffStyle[ex.difficulty] || diffStyle['Cơ bản']}">
+              ${escapeHtml(ex.difficulty)}
+            </span>
+          </div>
+          <p class="text-[11.5px] italic text-slate-500 leading-relaxed">${escapeHtml(ex.desc)}</p>
+        `;
+
+        card.addEventListener('click', () => {
+          loadExercise(state.lessonIndex, idx);
+          showToast(`Đã nạp bài #${idx + 1}: ${ex.title}`, 'info');
+        });
+
+        els.exerciseList.appendChild(card);
+      });
+    }
+
+    function loadExercise(lessonIdx, exIdx) {
+      state.lessonIndex = lessonIdx;
+      state.exerciseIndex = exIdx;
+      els.lessonSelect.value = String(lessonIdx);
+      els.pillTooltipBox.classList.add('hidden');
+
+      const ex = LESSONS[lessonIdx].exercises[exIdx];
+      setEditorValues(ex.html, ex.css);
+      renderExerciseList();
+      renderLevelNotes();
+    }
+
+    /*************************************************************************
+     * 10. TRỢ LÝ AI (GEMINI 2.5 FLASH + EXPONENTIAL BACKOFF)
+     *************************************************************************/
+    function openAiDrawer() {
+      els.aiDrawerWrapper.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        els.aiDrawerBackdrop.classList.remove('opacity-0');
+        els.aiDrawerPanel.classList.remove('translate-x-full');
+      });
+      setTimeout(() => els.aiChatInput.focus(), 250);
+    }
+
+    function closeAiDrawer() {
+      els.aiDrawerBackdrop.classList.add('opacity-0');
+      els.aiDrawerPanel.classList.add('translate-x-full');
+      setTimeout(() => els.aiDrawerWrapper.classList.add('hidden'), 260);
+    }
+
+    async function fetchGeminiWithRetry(payload, maxRetries = 4) {
+      const apiKey = state.customApiKey.trim() || '';
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+      let delay = 1000;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (response.ok) return await response.json();
+
+          if (attempt < maxRetries && (response.status === 429 || response.status >= 500)) {
+            await new Promise(r => setTimeout(r, delay));
+            delay *= 2;
+            continue;
+          }
+
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `Lỗi kết nối (${response.status})`);
+        } catch (err) {
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, delay));
+            delay *= 2;
+          } else {
+            throw err;
+          }
+        }
+      }
+    }
+
+    function formatAiMarkdown(text) {
+      const codeBlocks = [];
+      let processed = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        const idx = codeBlocks.length;
+        codeBlocks.push({ lang: (lang || 'code').toLowerCase(), code: code.trim() });
+        return `__CODE_BLOCK_${idx}__`;
+      });
+
+      processed = escapeHtml(processed)
+        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
+        .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 text-[#4f46e5] font-mono text-[11.5px]">$1</code>')
+        .replace(/^###\s+(.+)$/gm, '<h4 class="font-bold text-slate-900 mt-2 mb-1">$1</h4>')
+        .replace(/^##\s+(.+)$/gm, '<h3 class="font-bold text-[#4f46e5] mt-2 mb-1">$1</h3>')
+        .replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc">$1</li>')
+        .replace(/\n/g, '<br>');
+
+      codeBlocks.forEach((blk, idx) => {
+        const canApply = blk.lang === 'html' || blk.lang === 'css';
+        const blockHtml = `
+          <div class="my-2.5 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 text-slate-100">
+            <div class="px-3 py-1.5 bg-slate-800 border-b border-slate-700 flex items-center justify-between gap-2 text-[11px]">
+              <span class="font-mono font-bold uppercase text-emerald-400">${escapeHtml(blk.lang)}</span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="ai-copy-code px-2 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold cursor-pointer" data-block-idx="${idx}">Sao chép</button>
+                ${canApply ? `<button type="button" class="ai-apply-code px-2 py-0.5 rounded bg-[#10b981] hover:bg-emerald-500 text-white font-semibold cursor-pointer" data-block-idx="${idx}">Áp dụng vào trình soạn thảo</button>` : ''}
+              </div>
+            </div>
+            <pre class="p-3 overflow-x-auto font-mono text-[11.5px] leading-relaxed">${escapeHtml(blk.code)}</pre>
+          </div>`;
+        processed = processed.replace(`__CODE_BLOCK_${idx}__`, blockHtml);
+      });
+
+      return { html: processed, codeBlocks };
+    }
+
+    function appendChatMessage(role, content, isLoading = false) {
+      const wrapper = document.createElement('div');
+
+      if (role === 'user') {
+        wrapper.className = 'flex justify-end';
+        wrapper.innerHTML = `
+          <div class="max-w-[88%] bg-[#4f46e5] text-white rounded-2xl rounded-tr-sm px-3.5 py-2.5 text-xs sm:text-[13px] shadow-xs leading-relaxed">
+            ${escapeHtml(content).replace(/\n/g, '<br>')}
+          </div>`;
+      } else {
+        wrapper.className = 'flex items-start gap-2.5';
+        if (isLoading) {
+          wrapper.innerHTML = `
+            <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">AI</div>
+            <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-xs text-slate-500 shadow-xs flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#10b981] animate-bounce"></span>
+              <span>Trợ Lý AI đang phân tích mã HTML &amp; CSS của bạn...</span>
+            </div>`;
+        } else {
+          const { html, codeBlocks } = formatAiMarkdown(content);
+          wrapper.innerHTML = `
+            <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">AI</div>
+            <div class="max-w-[90%] bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-xs sm:text-[13px] text-slate-700 shadow-xs leading-relaxed overflow-hidden">
+              ${html}
+            </div>`;
+
+          wrapper.querySelectorAll('.ai-copy-code').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const blk = codeBlocks[Number(btn.dataset.blockIdx)];
+              if (blk) copyTextToClipboard(blk.code, `Đã sao chép đoạn mã ${blk.lang.toUpperCase()}!`);
+            });
+          });
+
+          wrapper.querySelectorAll('.ai-apply-code').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const blk = codeBlocks[Number(btn.dataset.blockIdx)];
+              if (!blk) return;
+              if (blk.lang === 'html') {
+                setEditorValues(blk.code, state.cssCode);
+                showToast('Đã áp dụng mã HTML từ AI vào trình soạn thảo!', 'success');
+              } else if (blk.lang === 'css') {
+                setEditorValues(state.htmlCode, blk.code);
+                showToast('Đã áp dụng mã CSS từ AI vào trình soạn thảo!', 'success');
+              }
+            });
+          });
+        }
+      }
+
+      els.aiChatMessages.appendChild(wrapper);
+      els.aiChatMessages.scrollTop = els.aiChatMessages.scrollHeight;
+      return wrapper;
+    }
+
+    async function sendPromptToAI(userMessage) {
+      if (!userMessage.trim() || state.isAiLoading) return;
+
+      state.isAiLoading = true;
+      els.btnSendAi.disabled = true;
+      appendChatMessage('user', userMessage);
+      const loadingEl = appendChatMessage('model', '', true);
+
+      const lesson = LESSONS[state.lessonIndex];
+      const exercise = lesson.exercises[state.exerciseIndex];
+
+      const systemPrompt = `Bạn là Trợ Lý AI sư phạm của phòng thực hành ảo BNH_HMTL_CSS thuộc Trường THPT B Nghĩa Hưng - Tỉnh Ninh Bình (Giáo viên phụ trách: Nguyễn Quốc An).
+Hãy trả lời bằng tiếng Việt ngắn gọn, rõ ràng, dễ hiểu đúng chuẩn SGK Tin học THPT (Level 1–4 + Flexbox).
+Đặc biệt lưu ý kiểm tra các lỗi học sinh hay gặp: thiếu thẻ đóng, đóng thẻ sai thứ tự, nhầm rowspan/colspan, quên dấu ; hoặc thiếu đơn vị px trong CSS, nhầm margin/padding, quên for/id ở label.
+Nếu gợi ý mã để áp dụng, hãy tách riêng khối \`\`\`html (phần nội dung bên trong body) và \`\`\`css.`;
+
+      const contextPrompt = `Chuyên đề hiện tại: ${lesson.name}
+Bài tập đang mở: #${state.exerciseIndex + 1} - ${exercise.title}
+
+--- MÃ HTML HIỆN TẠI ---
+\`\`\`html
+${state.htmlCode}
+\`\`\`
+
+--- MÃ CSS HIỆN TẠI ---
+\`\`\`css
+${state.cssCode}
+\`\`\`
+
+Yêu cầu của học sinh: ${userMessage}`;
+
+      try {
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: contextPrompt }] }],
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+        };
+
+        const result = await fetchGeminiWithRetry(payload);
+        const replyText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        loadingEl.remove();
+        if (replyText) {
+          appendChatMessage('model', replyText);
+        } else {
+          appendChatMessage('model', 'Trợ Lý AI chưa nhận được phản hồi hợp lệ. Bạn hãy thử gửi lại nhé.');
+        }
+      } catch (err) {
+        loadingEl.remove();
+        appendChatMessage(
+          'model',
+          `Không thể kết nối tới Gemini API (${err.message}). Nếu chạy tệp độc lập ngoài hệ thống, hãy bấm biểu tượng bánh răng ⚙ ở góc trên Drawer để nhập Gemini API Key cá nhân.`
+        );
+      } finally {
+        state.isAiLoading = false;
+        els.btnSendAi.disabled = false;
+      }
+    }
+
+    /*************************************************************************
+     * 11. GẮN SỰ KIỆN & KHỞI TẠO
+     *************************************************************************/
+    function bindEvents() {
+      els.lessonSelect.addEventListener('change', e => {
+        const idx = Number(e.target.value);
+        loadExercise(idx, 0);
+        showToast(`Đã chuyển sang ${LESSONS[idx].id.replace('_', ' ')}`, 'info');
+      });
+
+      els.btnResetLesson.addEventListener('click', () => {
+        loadExercise(state.lessonIndex, state.exerciseIndex);
+        showToast('Đã khôi phục mã HTML & CSS gốc!', 'success');
+      });
+
+      // 3 Tab cột trái
+      els.tabPreview.addEventListener('click', () => switchLeftTab('preview'));
+      els.tabDom.addEventListener('click', () => switchLeftTab('dom'));
+      els.tabNotes.addEventListener('click', () => switchLeftTab('notes'));
+
+      els.filterInput.addEventListener('input', e => {
+        state.searchQuery = e.target.value;
+        renderStructurePills();
+        renderDomTable();
+        renderLevelNotes();
+      });
+
+      els.btnViewDesktop.addEventListener('click', () => {
+        state.previewDevice = 'desktop';
+        els.previewFrameWrapper.style.width = '100%';
+        els.previewDeviceLabel.textContent = 'Desktop';
+        els.btnViewDesktop.className = 'p-1.5 rounded-lg bg-white text-[#4f46e5] shadow-xs transition cursor-pointer';
+        els.btnViewMobile.className = 'p-1.5 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer';
+      });
+
+      els.btnViewMobile.addEventListener('click', () => {
+        state.previewDevice = 'mobile';
+        els.previewFrameWrapper.style.width = '375px';
+        els.previewDeviceLabel.textContent = 'Mobile 375px';
+        els.btnViewMobile.className = 'p-1.5 rounded-lg bg-white text-[#4f46e5] shadow-xs transition cursor-pointer';
+        els.btnViewDesktop.className = 'p-1.5 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer';
+      });
+
+      els.btnRefreshPreview.addEventListener('click', () => runPreview(true));
+      els.btnClosePillTooltip.addEventListener('click', () => els.pillTooltipBox.classList.add('hidden'));
+
+      els.btnToggleFullSource.addEventListener('click', () => {
+        const isHidden = els.fullSourceBody.classList.toggle('hidden');
+        els.chevronFullSource.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+
+      els.btnCopyFullHtml.addEventListener('click', () => {
+        copyTextToClipboard(els.fullHtmlPreviewCode.textContent, 'Đã sao chép toàn bộ mã nguồn HTML5!');
+      });
+
+      els.btnDownloadHtml.addEventListener('click', () => {
+        const lesson = LESSONS[state.lessonIndex];
+        const blob = new Blob([els.fullHtmlPreviewCode.textContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BNH_HMTL_CSS_${lesson.id}_Bai${state.exerciseIndex + 1}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Đã tải tệp ${a.download}!`, 'success');
+      });
+
+      // Trình soạn thảo
+      els.modeHtml.addEventListener('click', () => switchEditorMode('html'));
+      els.modeCss.addEventListener('click', () => switchEditorMode('css'));
+      els.modeSplit.addEventListener('click', () => switchEditorMode('split'));
+
+      els.btnFormatCode.addEventListener('click', () => {
+        setEditorValues(formatHtmlCode(state.htmlCode), formatCssCode(state.cssCode));
+        showToast('Đã căn lề chuẩn cấu trúc HTML & CSS!', 'success');
+      });
+
+      els.btnToggleTheme.addEventListener('click', () => {
+        state.isDarkEditor = !state.isDarkEditor;
+        const themeName = state.isDarkEditor ? 'material-darker' : 'default';
+        if (cmHtml && cmCss) {
+          cmHtml.setOption('theme', themeName);
+          cmCss.setOption('theme', themeName);
+        }
+        els.iconMoon.classList.toggle('hidden', state.isDarkEditor);
+        els.iconSun.classList.toggle('hidden', !state.isDarkEditor);
+        showToast(state.isDarkEditor ? 'Đã chuyển trình soạn thảo sang chế độ Tối' : 'Đã chuyển trình soạn thảo sang chế độ Sáng', 'info');
+      });
+
+      els.btnCopyCode.addEventListener('click', () => {
+        if (state.editorMode === 'html') copyTextToClipboard(state.htmlCode, 'Đã sao chép mã HTML!');
+        else if (state.editorMode === 'css') copyTextToClipboard(state.cssCode, 'Đã sao chép mã CSS!');
+        else copyTextToClipboard(els.fullHtmlPreviewCode.textContent, 'Đã sao chép toàn bộ HTML & CSS!');
+      });
+
+      els.btnClearCode.addEventListener('click', () => {
+        if (state.editorMode === 'html') {
+          setEditorValues('', state.cssCode);
+          showToast('Đã xóa khung HTML (nhấn "Khôi phục mã gốc" để lấy lại).', 'warning');
+        } else if (state.editorMode === 'css') {
+          setEditorValues(state.htmlCode, '');
+          showToast('Đã xóa khung CSS (nhấn "Khôi phục mã gốc" để lấy lại).', 'warning');
+        } else {
+          setEditorValues('', '');
+          showToast('Đã xóa cả HTML & CSS (nhấn "Khôi phục mã gốc" để lấy lại).', 'warning');
+        }
+      });
+
+      els.btnRunCode.addEventListener('click', () => runPreview(true));
+      els.chkAutoRun.addEventListener('change', e => {
+        state.autoRun = e.target.checked;
+        if (state.autoRun) runPreview(false);
+      });
+
+      document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement !== els.aiChatInput) {
+          e.preventDefault();
+          runPreview(true);
+        }
+      });
+
+      // Trợ Lý AI
+      els.btnOpenAiHeader.addEventListener('click', openAiDrawer);
+      els.btnOpenAiToolbar.addEventListener('click', openAiDrawer);
+      els.btnCloseAiDrawer.addEventListener('click', closeAiDrawer);
+      els.aiDrawerBackdrop.addEventListener('click', closeAiDrawer);
+
+      els.btnExplainAi.addEventListener('click', () => {
+        openAiDrawer();
+        sendPromptToAI('Hãy giải thích chi tiết từng thẻ HTML và thuộc tính CSS trong đoạn mã hiện tại theo chuẩn kiến thức SGK THPT, đồng thời nhận xét xem có lỗi cú pháp nào cần lưu ý không.');
+      });
+
+      document.querySelectorAll('.ai-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => sendPromptToAI(btn.dataset.aiPrompt));
+      });
+
+      els.aiChatForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const text = els.aiChatInput.value.trim();
+        if (!text) return;
+        els.aiChatInput.value = '';
+        sendPromptToAI(text);
+      });
+
+      els.aiChatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          els.aiChatForm.dispatchEvent(new Event('submit'));
+        }
+      });
+
+      els.btnClearChat.addEventListener('click', () => {
+        els.aiChatMessages.innerHTML = '';
+        appendChatMessage('model', 'Đã làm mới cuộc trò chuyện! Bạn cần hỗ trợ gì về bài thực hành **HTML & CSS** hôm nay?');
+      });
+
+      els.customApiKeyInput.value = state.customApiKey;
+      els.btnToggleApiConfig.addEventListener('click', () => els.apiConfigBox.classList.toggle('hidden'));
+      els.btnSaveApiKey.addEventListener('click', () => {
+        state.customApiKey = els.customApiKeyInput.value.trim();
+        if (state.customApiKey) {
+          localStorage.setItem('bnh_gemini_api_key', state.customApiKey);
+          showToast('Đã lưu Gemini API Key cá nhân!', 'success');
+        } else {
+          localStorage.removeItem('bnh_gemini_api_key');
+          showToast('Đã chuyển về kết nối mặc định.', 'info');
+        }
+        els.apiConfigBox.classList.add('hidden');
+      });
+    }
+
+    function initApp() {
+      [
+        'lessonSelect', 'btnResetLesson', 'btnOpenAiHeader', 'tabPreview', 'tabDom', 'tabNotes',
+        'badgeTagCount', 'filterInput', 'btnViewDesktop', 'btnViewMobile', 'btnRefreshPreview',
+        'structureCounter', 'structurePills', 'pillTooltipBox', 'pillTooltipText', 'btnClosePillTooltip',
+        'panelPreview', 'panelDom', 'panelNotes', 'previewFrameWrapper', 'previewAddressBar',
+        'previewDomPill', 'previewDeviceLabel', 'livePreviewFrame', 'domTableBody',
+        'btnToggleFullSource', 'chevronFullSource', 'fullSourceBody', 'btnCopyFullHtml',
+        'btnDownloadHtml', 'fullHtmlPreviewCode', 'modeHtml', 'modeCss', 'modeSplit',
+        'btnFormatCode', 'btnOpenAiToolbar', 'btnToggleTheme', 'iconMoon', 'iconSun',
+        'btnCopyCode', 'btnClearCode', 'btnExplainAi', 'btnRunCode', 'chkAutoRun', 'lastRunTime',
+        'editorsGrid', 'htmlEditorContainer', 'cssEditorContainer', 'htmlSplitLabel', 'cssSplitLabel',
+        'htmlTextarea', 'cssTextarea', 'codeStatsBadge', 'exerciseListTitle', 'exerciseList',
+        'aiDrawerWrapper', 'aiDrawerBackdrop', 'aiDrawerPanel', 'btnCloseAiDrawer',
+        'btnToggleApiConfig', 'apiConfigBox', 'customApiKeyInput', 'btnSaveApiKey',
+        'btnClearChat', 'aiChatMessages', 'aiChatForm', 'aiChatInput', 'btnSendAi'
+      ].forEach(id => {
+        els[id] = document.getElementById(id);
+      });
+
+      populateLessonDropdown();
+      initEditors();
+      bindEvents();
+      switchEditorMode('html');
+      switchLeftTab('preview');
+      loadExercise(0, 0);
+    }
+
+    window.addEventListener('load', initApp);
+  </script>
+<!-- ==================== MODULE TRẮC NGHIỆM THEO LEVEL & BẪY ĐỀ HSG ==================== -->
+<style>
+.qz-fab{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;background:#f59e0b;color:#fff;font:700 12px 'Be Vietnam Pro',system-ui,sans-serif;border:0;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,.35)}
+.qz-fab:hover{background:#d97706}
+#qzModal{position:fixed;inset:0;z-index:70;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:12px;font-family:'Be Vietnam Pro',system-ui,sans-serif}
+#qzModal.on{display:flex}
+.qz-card{background:#fff;border-radius:18px;width:100%;max-width:720px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.3)}
+.qz-hd{padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#f8fafc}
+.qz-hd b{font-size:14px;color:#1e293b}
+.qz-hd select{flex:1;min-width:170px;padding:6px 8px;border:1px solid #c7d2fe;border-radius:10px;font-size:12px;font-weight:600;background:#eef2ff}
+.qz-tab,#qzX{padding:6px 10px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;font-size:12px;font-weight:700;color:#475569;cursor:pointer}
+.qz-tab.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.qz-tab.trap.on{background:#d97706;border-color:#d97706}
+#qzBody{padding:16px;overflow-y:auto;font-size:14px;color:#1e293b;line-height:1.6}
+.qz-prog{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#64748b}
+.qz-bar{height:6px;background:#e2e8f0;border-radius:9px;margin:6px 0 14px;overflow:hidden}
+.qz-bar i{display:block;height:100%;background:#4f46e5;transition:width .3s}
+.qz-q{font-weight:700;font-size:15px;margin-bottom:6px}
+.qz-o{display:flex;gap:10px;width:100%;text-align:left;padding:10px 12px;margin-top:8px;border:1.5px solid #e2e8f0;border-radius:12px;background:#f8fafc;cursor:pointer;font-size:14px}
+.qz-o:hover{border-color:#818cf8}
+.qz-o b{color:#4f46e5}
+.qz-o.ok{border-color:#10b981;background:#ecfdf5}
+.qz-o.no{border-color:#ef4444;background:#fef2f2}
+.qz-o.dim{opacity:.55}
+.qz-ex{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px}
+.qz-ex.g{background:#ecfdf5;border:1px solid #a7f3d0}
+.qz-ex.r{background:#fef2f2;border:1px solid #fecaca}
+.qz-go,.qz-act button{margin-top:10px;margin-right:8px;padding:8px 14px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+#qzBody code{background:#eef2ff;color:#4338ca;padding:1px 5px;border-radius:5px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+.qz-res{text-align:center;padding:12px 0}
+.qz-big{font-size:40px;font-weight:800;color:#4f46e5}
+.qz-h{margin:14px 0 6px;font-weight:800;color:#b45309}
+.qz-rv{padding:8px 10px;margin-bottom:8px;border-left:4px solid #f59e0b;background:#fffbeb;border-radius:8px;font-size:13px}
+.qz-rv p{margin:2px 0}.qz-a{color:#047857;font-weight:700}
+.qz-ds{padding:10px 12px;margin-top:8px;border:1.5px solid #e2e8f0;border-radius:12px;background:#f8fafc}
+.qz-ds.ok{border-color:#10b981;background:#ecfdf5}.qz-ds.no{border-color:#ef4444;background:#fef2f2}
+.qz-tf{display:flex;gap:6px;margin-top:6px}
+.qz-tf button{padding:4px 14px;border:1.5px solid #c7d2fe;border-radius:9px;background:#fff;font-weight:700;font-size:12px;color:#4338ca;cursor:pointer}
+.qz-tf button.pick{background:#4f46e5;color:#fff}
+.qz-yx{font-size:13px;margin-top:6px}
+</style>
+<script>
+(() => {
+  /* Quy ước: mỗi câu = [đề, [ĐÁP ÁN ĐÚNG, sai1, sai2, sai3], giải thích]; đáp án đúng luôn viết đầu tiên, chương trình tự xáo trộn. m = trắc nghiệm, t = bẫy đề HSG */
+  const D = {
+    LEVEL_1: {
+      m: [
+        ['Tệp trang chủ của một website thường được đặt tên là gì?', ['index.html', 'home.css', 'main.doc', 'web.txt'], 'Máy chủ web mặc định tìm tệp `index.html` khi truy cập một thư mục.'],
+        ['Một phần tử (element) HTML hoàn chỉnh gồm những gì?', ['Thẻ mở + nội dung + thẻ đóng', 'Chỉ thẻ mở', 'Tên thẻ + thuộc tính', 'Chỉ phần nội dung'], 'Phần tử = thẻ mở + nội dung + thẻ đóng (trừ thẻ rỗng như `<br>`, `<hr>`).'],
+        ['Thẻ nào sau đây là thẻ rỗng (không có thẻ đóng)?', ['`<br>`', '`<p>`', '`<h1>`', '`<div>`'], '`<br>` (xuống dòng) và `<hr>` (kẻ ngang) là thẻ rỗng.'],
+        ['Để hiển thị đúng ký tự `<` trên trang web, ta viết:', ['`&lt;`', '`&gt;`', '`&amp;`', '`&nbsp;`'], '`&lt;` là dấu `<`; `&gt;` là `>`; `&amp;` là `&`; `&nbsp;` là dấu cách không ngắt.'],
+        ['Thẻ nào dùng để nhấn mạnh nội dung quan trọng (ngữ nghĩa)?', ['`<strong>`', '`<small>`', '`<sub>`', '`<sup>`'], '`<strong>` nhấn mạnh (hiển thị đậm); `<small>` chữ nhỏ; `<sub>`/`<sup>` chỉ số dưới/trên.']
+      ],
+      t: [
+        ['Đoạn `<p>Hà      Nội</p>` (nhiều dấu cách giữa hai từ) hiển thị có bao nhiêu dấu cách giữa Hà và Nội?', ['1 dấu cách', '6 dấu cách', '0 dấu cách', 'Báo lỗi cú pháp'], 'Trình duyệt gộp mọi khoảng trắng liên tiếp thành 1. Muốn giữ nhiều dấu cách phải dùng `&nbsp;` hoặc thẻ `<pre>`.'],
+        ['Thẻ `<p style="color:red; font-size:20">Chào</p>` hiển thị như thế nào?', ['Chữ đỏ, cỡ chữ mặc định (font-size bị bỏ qua)', 'Chữ đỏ, cỡ 20px', 'Chữ đen, cỡ 20px', 'Toàn bộ style bị bỏ qua'], 'Độ dài khác 0 bắt buộc có đơn vị (`20px`). Khai báo sai bị bỏ riêng, khai báo `color` vẫn có tác dụng.'],
+        ['Đoạn `<!-- <p>Ẩn</p> -->` cho kết quả nào?', ['Không hiển thị gì nhưng vẫn xem được trong mã nguồn', 'Hiển thị chữ Ẩn', 'Hiển thị chữ Ẩn màu xám', 'Báo lỗi vì lồng thẻ trong chú thích'], 'Chú thích không hiện trên trang nhưng ai cũng xem được bằng View Source — không đặt thông tin bí mật trong chú thích.']
+      ]
+    },
+    LEVEL_2: {
+      m: [
+        ['Thẻ nào tạo danh sách có thứ tự (1, 2, 3...)?', ['`<ol>`', '`<ul>`', '`<dl>`', '`<li>`'], '`<ol>` = ordered list; `<ul>` = không thứ tự; `<dl>` = danh sách mô tả.'],
+        ['Danh sách mô tả `<dl>` dùng cặp thẻ con nào?', ['`<dt>` và `<dd>`', '`<li>` và `<ul>`', '`<th>` và `<td>`', '`<dl>` và `<dd>`'], '`<dt>` là thuật ngữ, `<dd>` là phần mô tả.'],
+        ['Muốn một ô trải rộng qua 2 CỘT, dùng thuộc tính nào?', ['`colspan="2"`', '`rowspan="2"`', '`cols="2"`', '`span="2"`'], '`colspan` gộp theo chiều ngang (cột); `rowspan` gộp theo chiều dọc (hàng).'],
+        ['Đường dẫn `../img/a.png` có nghĩa là?', ['Lên một cấp thư mục rồi vào thư mục img', 'Vào thư mục img trong thư mục hiện tại', 'Đường dẫn tuyệt đối tới img', 'Thư mục gốc của ổ đĩa'], '`..` = thư mục cha; `./` hoặc không có tiền tố = thư mục hiện tại.'],
+        ['Để nhảy tới phần tử có `id="gt"` trong cùng trang, viết:', ['`<a href="#gt">`', '`<a href="gt">`', '`<a href=".gt">`', '`<a id="#gt">`'], 'Liên kết nội bộ dùng dấu `#` + giá trị id của phần tử đích.']
+      ],
+      t: [
+        ['Bảng 3 cột. Dòng 1 có một ô `rowspan="2"` ở cột 1. Dòng 2 cần viết bao nhiêu thẻ `<td>` để đủ bảng?', ['2 thẻ', '3 thẻ', '1 thẻ', '0 thẻ'], 'Ô cột 1 của dòng 1 đã chiếm sẵn vị trí cột 1 ở dòng 2, nên dòng 2 chỉ viết 2 ô còn lại. Viết đủ 3 sẽ làm bảng bị lòi cột.'],
+        ['Nhấp vào `<a href="www.google.com">Google</a>` sẽ đi đâu?', ['Tìm tệp tên `www.google.com` ở thư mục hiện tại (đường dẫn tương đối)', 'Mở trang Google', 'Báo lỗi cú pháp', 'Mở thư mục cha'], 'Thiếu giao thức `https://` nên trình duyệt hiểu là đường dẫn tương đối. Liên kết tuyệt đối phải có `https://`.'],
+        ['Để đúng chuẩn HTML, danh sách con (lồng nhau) phải đặt ở đâu?', ['Bên trong một thẻ `<li>` của danh sách cha', 'Đặt trực tiếp giữa hai thẻ `<li>` của danh sách cha', 'Đặt sau thẻ đóng của danh sách cha', 'Đặt trong thẻ `<head>`'], 'Con trực tiếp của `<ul>`/`<ol>` chỉ được là `<li>`. Trình duyệt vẫn hiển thị nếu đặt sai, nhưng đề thi hay hỏi chỗ này.']
+      ]
+    },
+    LEVEL_3: {
+      m: [
+        ['Để nhiều radio chỉ chọn được MỘT, chúng phải có cùng thuộc tính nào?', ['`name`', '`id`', '`value`', '`class`'], 'Radio cùng `name` tạo thành nhóm loại trừ nhau; `id` phải là duy nhất.'],
+        ['`<label for="tk">` liên kết với phần tử nào?', ['Phần tử có `id="tk"`', 'Phần tử có `name="tk"`', 'Phần tử có `class="tk"`', 'Phần tử đứng liền sau'], '`for` của label khớp với `id` của điều khiển; nhấp vào nhãn sẽ chọn/focus điều khiển.'],
+        ['Thuộc tính nào hiện thanh điều khiển (phát/dừng, âm lượng) cho `<video>`?', ['`controls`', '`autoplay`', '`loop`', '`muted`'], '`controls` hiện thanh điều khiển; `autoplay` tự phát; `loop` lặp; `muted` tắt tiếng.'],
+        ['Cặp thẻ nào gom nhóm các điều khiển trong form và đặt tiêu đề cho nhóm?', ['`<fieldset>` và `<legend>`', '`<group>` và `<title>`', '`<div>` và `<caption>`', '`<form>` và `<label>`'], '`<fieldset>` vẽ khung nhóm, `<legend>` là tiêu đề của khung.'],
+        ['Để liên kết mở trong khung `<iframe name="kn">`, thẻ `<a>` cần:', ['`target="kn"`', '`href="kn"`', '`id="kn"`', '`frame="kn"`'], '`target` của `<a>` trùng với `name` của iframe.']
+      ],
+      t: [
+        ['Hai radio: một có `name="a"`, một có `name="b"`. Có chọn được cả hai cùng lúc không?', ['Có, vì khác name nên thuộc hai nhóm khác nhau', 'Không, radio luôn chỉ chọn một', 'Không, vì khác id', 'Chỉ chọn được khi có `checked`'], 'Nhóm radio xác định bằng `name`, không phải `id` hay vị trí. Đây là bẫy kinh điển.'],
+        ['Ô `<input type="text" id="ten" value="An">` nằm trong form. Khi nộp, dữ liệu ô này có được gửi đi không?', ['Không, vì thiếu thuộc tính `name`', 'Có, gửi dạng `ten=An`', 'Có, gửi dạng `id=An`', 'Chỉ gửi khi có `required`'], 'Dữ liệu gửi đi có dạng cặp `name=giá_trị`. Thiếu `name` thì trường đó bị bỏ qua dù có `id`.'],
+        ['Liên kết `<a target="kn">` nhưng iframe viết `<iframe id="kn">` (không có name). Kết quả?', ['Mở ra tab/cửa sổ mới', 'Hiển thị trong iframe đó', 'Báo lỗi', 'Không có gì xảy ra'], '`target` chỉ khớp với `name` của iframe, không khớp `id`. Không tìm thấy khung nên trình duyệt mở tab mới.']
+      ]
+    },
+    LEVEL_4: {
+      m: [
+        ['Cách nào gắn tệp CSS bên ngoài vào trang HTML?', ['`<link rel="stylesheet" href="style.css">`', '`<style src="style.css">`', '`<css href="style.css">`', '`<script href="style.css">`'], 'Thẻ `<link>` đặt trong `<head>` dùng để nạp tệp CSS ngoài (external).'],
+        ['Bộ chọn nào chọn các phần tử có `class="tin"`?', ['`.tin`', '`#tin`', '`tin`', '`*tin`'], '`.` là bộ chọn lớp, `#` là bộ chọn id, tên không tiền tố là bộ chọn thẻ.'],
+        ['Bộ chọn `div p` chọn những phần tử nào?', ['Mọi `<p>` nằm bên trong `<div>` (ở bất kì cấp nào)', 'Chỉ `<p>` là con trực tiếp của `<div>`', 'Cả `<div>` và `<p>`', 'Thẻ `<div>` đứng ngay trước `<p>`'], 'Dấu cách giữa hai bộ chọn là bộ chọn hậu duệ; `div, p` (dấu phẩy) mới là chọn nhóm.'],
+        ['Thuộc tính nào tạo khoảng cách BÊN NGOÀI viền của phần tử?', ['`margin`', '`padding`', '`border-spacing`', '`outline`'], '`margin` = lề ngoài; `padding` = đệm trong, giữa viền và nội dung.'],
+        ['Mức ưu tiên (từ cao xuống thấp) trong CSS là:', ['inline > id > class > thẻ', 'id > inline > class > thẻ', 'thẻ > class > id > inline', 'class > id > thẻ > inline'], 'Style nội tuyến thắng id, id thắng class, class thắng bộ chọn thẻ.']
+      ],
+      t: [
+        ['`<p id="y" class="x">` với `p{color:red}` `.x{color:blue}` `#y{color:green}`. Màu chữ là?', ['Xanh lá (green)', 'Xanh dương (blue)', 'Đỏ (red)', 'Đen mặc định'], 'Bộ chọn id mạnh hơn class, class mạnh hơn thẻ — không phụ thuộc thứ tự viết.'],
+        ['`p { color: red font-size: 16px; }` (thiếu dấu `;` sau red). Kết quả?', ['Cả màu đỏ lẫn cỡ chữ đều không được áp dụng', 'Chữ đỏ, cỡ 16px', 'Chữ đỏ, cỡ chữ mặc định', 'Cỡ 16px, màu mặc định'], 'Thiếu `;` làm hai khai báo dính thành một giá trị sai, trình duyệt bỏ cả khai báo đó.'],
+        ['`margin: 10px 20px 30px;` thì lề TRÁI bằng bao nhiêu?', ['20px', '10px', '30px', '0'], 'Ba giá trị: trên = 10, trái/phải = 20, dưới = 30.']
+      ]
+    },
+    LEVEL_5_FLEXBOX: {
+      m: [
+        ['Để bật Flexbox, đặt `display: flex` lên đâu?', ['Phần tử cha (container)', 'Từng phần tử con', 'Bắt buộc thẻ `<body>`', 'Thẻ `<head>`'], '`display:flex` đặt ở container; các con trực tiếp trở thành flex item.'],
+        ['`justify-content` canh chỉnh các phần tử theo:', ['Trục chính', 'Trục phụ', 'Luôn theo chiều ngang', 'Luôn theo chiều dọc'], '`justify-content` theo trục chính, `align-items` theo trục phụ; trục chính phụ thuộc `flex-direction`.'],
+        ['Giá trị nào cho phép các flex item xuống dòng khi hết chỗ?', ['`flex-wrap: wrap`', '`flex-flow: none`', '`flex-direction: wrap`', '`wrap: true`'], 'Mặc định là `nowrap` (không xuống dòng).'],
+        ['`flex-direction: column` làm trục chính trở thành:', ['Trục dọc', 'Trục ngang', 'Trục chéo', 'Không đổi'], 'Các item xếp từ trên xuống; `justify-content` lúc này canh theo chiều dọc.'],
+        ['Thuộc tính nào tạo khoảng cách đều giữa các flex item?', ['`gap`', '`margin-collapse`', '`space-flex`', '`spacing`'], '`gap` đặt trên container, gọn hơn dùng margin cho từng item.']
+      ],
+      t: [
+        ['Với `flex-direction: column`, `justify-content: center` căn giữa theo hướng nào?', ['Chiều dọc', 'Chiều ngang', 'Cả hai chiều', 'Không có tác dụng'], 'Trục chính đã đổi thành dọc nên `justify-content` canh dọc; muốn căn ngang dùng `align-items`.'],
+        ['Đặt `display:flex` lên thẻ `<li>` thay vì `<ul>`. Các `<li>` sẽ?', ['Vẫn xếp như cũ, không thành hàng ngang', 'Xếp thành một hàng ngang', 'Biến mất', 'Xếp thành lưới'], 'Flex chỉ tác dụng lên CON TRỰC TIẾP của phần tử có `display:flex`, không phải lên chính nó.'],
+        ['Container `display:flex` rộng 800px chứa 4 item rộng 300px (không đặt `flex-wrap`). Kết quả?', ['Cả 4 item nằm 1 hàng, bị co lại cho vừa', 'Xuống dòng, mỗi hàng 2 item', 'Tràn ra ngoài và hiện thanh cuộn', 'Chỉ hiện 2 item'], 'Mặc định `flex-wrap: nowrap` và `flex-shrink: 1` nên item bị co lại thay vì xuống dòng.']
+      ]
+    }
+  };
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/`([^`]+)`/g, '<code>$1</code>');
+  const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const st = { l: 0, m: 'm', q: [], i: 0, s: 0, w: [], d: false };
+  const key = () => LESSONS[st.l].id;
+  /* BỔ SUNG: m = thêm trắc nghiệm; d = câu Đúng/Sai (4 ý a–d): [đề, [[ý, 1=đúng/0=sai, giải thích], ...]] */
+  const X = {
+    LEVEL_1: {
+      m: [
+        ['Thẻ nào tạo tiêu đề lớn nhất trong nội dung trang?', ['`<h1>`', '`<h6>`', '`<title>`', '`<head>`'], '`<h1>` là tiêu đề cấp 1 (lớn nhất) nằm trong `<body>`; `<title>` chỉ hiện trên tab trình duyệt.'],
+        ['Phần nào chứa thông tin mô tả trang (`<meta>`, `<title>`) và không hiển thị trực tiếp?', ['`<head>`', '`<body>`', '`<footer>`', '`<main>`'], '`<head>` chứa siêu dữ liệu của trang; nội dung hiển thị nằm trong `<body>`.'],
+        ['Thuộc tính `style` đặt trong thẻ HTML thuộc cách áp dụng CSS nào?', ['Nội tuyến (inline)', 'Nội bộ (internal)', 'Tệp ngoài (external)', 'Mặc định của trình duyệt'], 'CSS viết ngay trong thuộc tính `style` của thẻ gọi là CSS nội tuyến.']
+      ],
+      d: [
+        ['Bạn Hưng (11A1) viết trang giới thiệu: `<!DOCTYPE html>`, `<html>`, `<head>` chứa `<title>`, rồi `<body>` chứa `<h1>` và `<p>`. Xét các phát biểu:', [
+          ['Nội dung thẻ `<title>` hiển thị trên tab của trình duyệt.', 1, '`<title>` nằm trong `<head>` và hiện ở tab.'],
+          ['Thẻ `<h1>` phải đặt trong `<head>`.', 0, '`<h1>` là nội dung hiển thị nên nằm trong `<body>`.'],
+          ['Có thể soạn trang web bằng trình soạn thảo văn bản thuần rồi lưu với đuôi `.html`.', 1, 'Tệp HTML là văn bản thuần.'],
+          ['Thẻ `<br>` phải có thẻ đóng `</br>` mới hợp lệ.', 0, '`<br>` là thẻ rỗng, không có thẻ đóng.']]],
+        ['Xét đoạn mã `<p>H<sub>2</sub>O và x<sup>2</sup></p><p>Dòng hai</p>`:', [
+          ['`<sub>` tạo chỉ số dưới (như trong H2O).', 1, '`sub` = subscript, chỉ số dưới.'],
+          ['`<sup>` tạo chỉ số dưới.', 0, '`<sup>` tạo chỉ số TRÊN.'],
+          ['Muốn hiện chữ `<p>` ra màn hình (không phải thẻ) phải viết `&lt;p&gt;`.', 1, 'Dùng thực thể HTML cho `<` và `>`.'],
+          ['Hai thẻ `<p>` liên tiếp hiển thị trên cùng một dòng.', 0, '`<p>` là phần tử khối, mỗi đoạn xuống một dòng riêng.']]]
+      ]
+    },
+    LEVEL_2: {
+      m: [
+        ['Thẻ nào tạo một HÀNG trong bảng?', ['`<tr>`', '`<td>`', '`<th>`', '`<tb>`'], '`<tr>` = table row; `<td>` ô dữ liệu; `<th>` ô tiêu đề.'],
+        ['Thuộc tính nào của `<img>` chứa văn bản thay thế khi ảnh không tải được?', ['`alt`', '`title`', '`src`', '`name`'], '`alt` hiện khi ảnh lỗi và hỗ trợ trình đọc màn hình; `src` là đường dẫn ảnh.'],
+        ['Muốn liên kết mở ở tab mới, thêm vào thẻ `<a>` thuộc tính:', ['`target="_blank"`', '`href="_new"`', '`rel="tab"`', '`open="new"`'], '`target="_blank"` mở liên kết trong tab/cửa sổ mới.']
+      ],
+      d: [
+        ['Cho bảng: `<table><tr><th>Họ tên</th><th>Điểm</th></tr><tr><td>An</td><td>9</td></tr></table>`. Xét các phát biểu:', [
+          ['Dòng đầu là hàng tiêu đề vì dùng `<th>`.', 1, '`<th>` là ô tiêu đề (mặc định đậm, căn giữa).'],
+          ['Bảng có 2 hàng và 2 cột.', 1, 'Có 2 thẻ `<tr>`, mỗi hàng 2 ô.'],
+          ['Thẻ `<td>` có thể đặt trực tiếp trong `<table>` mà không cần `<tr>`.', 0, '`<td>` phải nằm trong `<tr>`.'],
+          ['Gộp hai ô nằm ngang cạnh nhau thành một ô thì dùng `rowspan="2"`.', 0, 'Gộp ngang dùng `colspan`; `rowspan` gộp dọc.']]],
+        ['Trang `index.html` ở thư mục gốc, ảnh nằm ở `img/logo.png`. Xét các phát biểu:', [
+          ['`<img src="img/logo.png" alt="Logo">` hiển thị đúng ảnh (đường dẫn tương đối).', 1, 'Đường dẫn tính từ vị trí tệp hiện tại.'],
+          ['`<a href="#top">` nhảy tới phần tử có `id="top"` trong cùng trang.', 1, 'Liên kết nội bộ dùng `#` + id.'],
+          ['`<a href="https://example.com">` là đường dẫn tương đối.', 0, 'Có giao thức `https://` nên là đường dẫn tuyệt đối.'],
+          ['Thẻ `<img>` bắt buộc có thẻ đóng `</img>`.', 0, '`<img>` là thẻ rỗng.']]]
+      ]
+    },
+    LEVEL_3: {
+      m: [
+        ['Thuộc tính nào của `<input>` bắt buộc phải điền trước khi gửi form?', ['`required`', '`checked`', '`readonly`', '`disabled`'], '`required` bắt buộc nhập; `checked` đánh dấu sẵn; `readonly` chỉ đọc; `disabled` vô hiệu hóa (và không gửi đi).'],
+        ['Điều khiển nào cho nhập văn bản NHIỀU dòng?', ['`<textarea>`', '`<input type="text">`', '`<select>`', '`<label>`'], '`<textarea>` nhập nhiều dòng; `<input type="text">` chỉ một dòng.'],
+        ['Kiểu `<input>` nào cho chọn NHIỀU lựa chọn độc lập?', ['`type="checkbox"`', '`type="radio"`', '`type="password"`', '`type="submit"`'], 'Checkbox chọn nhiều; radio (cùng name) chỉ chọn một.']
+      ],
+      d: [
+        ['Biểu mẫu: `<label for="ten">Họ tên</label><input id="ten" name="hoten" type="text"><input type="radio" name="gt" value="nam"><input type="radio" name="gt" value="nu">`. Xét các phát biểu:', [
+          ['Nhấp vào chữ "Họ tên" sẽ đưa con trỏ vào ô nhập.', 1, '`for` của label khớp với `id` của ô nhập.'],
+          ['Hai radio cùng `name="gt"` nên chỉ chọn được một.', 1, 'Cùng `name` là một nhóm loại trừ.'],
+          ['Khi nộp form, dữ liệu ô họ tên gửi đi dạng `ten=...`.', 0, 'Gửi theo `name`, tức `hoten=...`.'],
+          ['Radio không có `value` mà được chọn sẽ gửi đi giá trị mặc định `on`.', 1, 'Radio/checkbox thiếu `value` gửi `on`.']]],
+        ['Có `<iframe name="khung" src="a.html"></iframe>` và `<a href="b.html" target="khung">`. Xét các phát biểu:', [
+          ['Nhấp liên kết, trang `b.html` hiển thị trong iframe.', 1, '`target` trùng `name` của iframe.'],
+          ['Đổi `name="khung"` thành `id="khung"` thì liên kết vẫn mở trong iframe.', 0, '`target` chỉ khớp `name`, không khớp `id` nên mở tab mới.'],
+          ['`<video src="v.mp4" controls>` hiện thanh phát/dừng.', 1, '`controls` hiện thanh điều khiển.'],
+          ['`<audio autoplay>` luôn được mọi trình duyệt tự phát khi tải trang.', 0, 'Nhiều trình duyệt chặn tự phát âm thanh.']]]
+      ]
+    },
+    LEVEL_4: {
+      m: [
+        ['Quy tắc CSS nào viết đúng cú pháp?', ['`p { color: red; }`', '`p ( color = red )`', '`p { color - red }`', '`<p> color: red </p>`'], 'Dạng chuẩn: bộ chọn { thuộc tính: giá trị; }.'],
+        ['Thuộc tính nào đổi MÀU CHỮ?', ['`color`', '`background-color`', '`font-color`', '`text-style`'], '`color` đổi màu chữ; `background-color` đổi màu nền; không có `font-color`.'],
+        ['Khai báo nào căn giữa nội dung văn bản?', ['`text-align: center`', '`align: center`', '`font-align: middle`', '`text-center: yes`'], '`text-align: center` căn giữa văn bản theo chiều ngang.']
+      ],
+      d: [
+        ['Cho CSS `.tin{color:blue} #nb{color:red} p{color:green}` và HTML `<p class="tin">A</p><p id="nb" class="tin">B</p><p>C</p>`. Xét các phát biểu:', [
+          ['Đoạn A có màu xanh dương.', 1, 'Class mạnh hơn bộ chọn thẻ.'],
+          ['Đoạn B có màu đỏ.', 1, 'Id mạnh hơn class.'],
+          ['Đoạn C có màu xanh lá.', 1, 'Chỉ khớp bộ chọn thẻ `p`.'],
+          ['Nếu viết `p{color:green}` xuống cuối tệp thì đoạn A chuyển sang xanh lá.', 0, 'Khác độ ưu tiên thì thứ tự viết không quyết định; class vẫn thắng thẻ.']]],
+        ['Xét `div { margin: 10px; padding: 20px; border: 2px solid black; }`. Xét các phát biểu:', [
+          ['Khoảng cách giữa nội dung và viền là 20px.', 1, '`padding` là đệm trong.'],
+          ['Khoảng cách giữa viền và phần tử xung quanh là 10px.', 1, '`margin` là lề ngoài.'],
+          ['`padding` nằm ngoài viền, `margin` nằm trong viền.', 0, 'Ngược lại: padding trong, margin ngoài.'],
+          ['Nếu bỏ từ `solid`, viền vẫn hiển thị.', 0, 'Kiểu viền mặc định là `none` nên không hiện viền.']]]
+      ]
+    },
+    LEVEL_5_FLEXBOX: {
+      m: [
+        ['Thuộc tính nào canh các item theo TRỤC PHỤ?', ['`align-items`', '`justify-content`', '`flex-wrap`', '`gap`'], '`align-items` canh theo trục phụ; `justify-content` theo trục chính.'],
+        ['`justify-content: space-between` làm gì?', ['Item đầu sát mép đầu, item cuối sát mép cuối, khoảng trống chia đều ở giữa', 'Dồn mọi item vào giữa', 'Chia đều khoảng trống cả hai đầu', 'Kéo giãn các item bằng nhau'], '`space-between` đẩy item đầu/cuối ra hai mép, chia đều phần còn lại giữa các item.'],
+        ['Mặc định `flex-direction` có giá trị là gì?', ['`row`', '`column`', '`row-reverse`', '`wrap`'], '`row`: trục chính nằm ngang, item xếp từ trái sang phải.']
+      ],
+      d: [
+        ['Thanh điều hướng `nav { display:flex; justify-content:space-between; align-items:center; }` chứa 2 phần tử: logo và menu. Xét các phát biểu:', [
+          ['Logo và menu là flex item của `nav`.', 1, 'Con trực tiếp của container là flex item.'],
+          ['Logo sát mép trái, menu sát mép phải.', 1, '`space-between` đẩy hai phần tử ra hai đầu.'],
+          ['`align-items: center` căn giữa các item theo chiều ngang.', 0, 'Với `row`, trục phụ là chiều dọc nên căn giữa theo chiều dọc.'],
+          ['Phải thêm `display:flex` cho cả logo và menu thì mới xếp ngang.', 0, 'Chỉ cần đặt trên container `nav`.']]],
+        ['`.luoi { display:flex; flex-wrap:wrap; gap:16px; }` chứa 6 thẻ rộng 300px, khung rộng 1000px. Xét các phát biểu:', [
+          ['Mỗi hàng chứa được 3 thẻ.', 1, '3×300 + 2×16 = 932 ≤ 1000; thêm thẻ thứ 4 sẽ vượt.'],
+          ['Lưới có 3 hàng.', 0, '6 thẻ chia 3 thẻ/hàng được 2 hàng.'],
+          ['`gap` tạo khoảng cách giữa các item mà không cần `margin`.', 1, '`gap` đặt trên container.'],
+          ['Nếu bỏ `flex-wrap: wrap`, 6 thẻ sẽ tự xuống dòng.', 0, 'Mặc định `nowrap`: không xuống dòng.']]]
+      ]
+    }
+  };
+  Object.keys(X).forEach(k => { D[k].m.push(...X[k].m); D[k].d = X[k].d; });
+  const dsRows = c => c.ys.map((y, k) => `<div class="qz-ds" data-y="${k}"><span>${'abcd'[k]}) ${esc(y.t)}</span><span class="qz-tf"><button data-v="1">Đúng</button><button data-v="0">Sai</button></span><div class="qz-yx"></div></div>`).join('');
+  const dsRev = x => `<div class="qz-rv"><p>${esc(x[0])}</p>${x[1].map((y, k) => `<p><b class="qz-a">${'abcd'[k]}) ${y[1] ? 'ĐÚNG' : 'SAI'}</b> — ${esc(y[2])}</p>`).join('')}</div>`;
+  function ds(btn) {
+    const c = st.q[st.i], row = btn.closest('.qz-ds'), y = c.ys[+row.dataset.y];
+    if (y.c !== null) return;
+    y.c = btn.dataset.v === '1';
+    const ok = y.c === y.a;
+    if (ok) st.s++;
+    row.classList.add(ok ? 'ok' : 'no');
+    row.querySelectorAll('button').forEach(x => x.classList.toggle('pick', x === btn));
+    row.querySelector('.qz-yx').innerHTML = `<b>${ok ? '✔' : '✘'} Đáp án: ${y.a ? 'ĐÚNG' : 'SAI'}.</b> ${esc(y.e)}`;
+    if (c.ys.every(z => z.c !== null)) {
+      const g = c.ys.filter(z => z.c === z.a).length;
+      if (g < 4) st.w.push(c.x);
+      st.d = true;
+      $('#qzEx').innerHTML = `<div class="qz-ex ${g === 4 ? 'g' : 'r'}"><b>Bạn đúng ${g}/4 ý.</b></div><button class="qz-go" data-a="go">${st.i + 1 >= st.q.length ? 'Xem kết quả' : 'Câu tiếp ▸'}</button>`;
+    }
+  }
+
+
+  const best = v => { try { const k = 'bnh_quiz_' + key() + '_' + st.m; const o = +localStorage.getItem(k) || 0; if (v > o) localStorage.setItem(k, v); return Math.max(o, v); } catch (e) { return v; } };
+
+  function start(src) {
+    const list = src || ((D[key()] || {})[st.m] || []);
+    st.q = shuf(list).map(x => st.m === 'd' ? { x, q: x[0], ys: x[1].map(y => ({ t: y[0], a: !!y[1], e: y[2], c: null })) } : { x, q: x[0], o: shuf(x[1].map((t, k) => [t, k === 0])), e: x[2] });
+    st.i = 0; st.s = 0; st.w = []; st.d = false; render();
+  }
+
+  function render() {
+    const b = $('#qzBody'), n = st.q.length, tot = n * (st.m === 'd' ? 4 : 1), lab = { m: 'Trắc nghiệm', t: '🪤 Bẫy đề HSG', d: 'Đúng / Sai' }[st.m];
+    document.querySelectorAll('.qz-tab').forEach(e => e.classList.toggle('on', e.dataset.m === st.m));
+    if (st.i >= n) {
+      const p = tot ? Math.round(st.s / tot * 100) : 0, bs = best(p);
+      b.innerHTML = `<div class="qz-res"><div class="qz-big">${st.s}/${tot}</div><p>${p >= 90 ? 'Xuất sắc! Bạn đã sẵn sàng cho đề HSG.' : p >= 70 ? 'Khá tốt — xem lại các câu sai bên dưới.' : 'Cần ôn lại — đọc lại thẻ GHI NHỚ và CẢNH BÁO LỖI của Level này.'}</p><small>Kỷ lục của bạn: ${bs}%</small></div>` +
+        (st.w.length ? `<h4 class="qz-h">Các câu cần xem lại</h4>` + st.w.map(x => st.m === 'd' ? dsRev(x) : `<div class="qz-rv"><p>${esc(x[0])}</p><p class="qz-a">✔ ${esc(x[1][0])}</p><p>${esc(x[2])}</p></div>`).join('') : '') +
+        `<div class="qz-act"><button data-a="again">Làm lại</button>${st.w.length ? '<button data-a="wrong">Chỉ làm câu sai</button>' : ''}<button data-a="next">Level kế tiếp ▸</button></div>`;
+      return;
+    }
+    const c = st.q[st.i];
+    b.innerHTML = `<div class="qz-prog"><span>${lab} — Câu ${st.i + 1}/${n}</span><span>Đúng: ${st.s}</span></div><div class="qz-bar"><i style="width:${st.i / n * 100}%"></i></div><p class="qz-q">${esc(c.q)}</p>` +
+      (c.ys ? dsRows(c) : c.o.map((o, k) => `<button class="qz-o" data-k="${k}"><b>${'ABCD'[k]}</b><span>${esc(o[0])}</span></button>`).join('')) + '<div id="qzEx"></div>';
+  }
+
+  function pick(k) {
+    const c = st.q[st.i];
+    if (st.d || !c || !c.o || !c.o[k]) return;
+    st.d = true;
+    const ok = c.o[k][1];
+    ok ? st.s++ : st.w.push(c.x);
+    document.querySelectorAll('.qz-o').forEach((el, j) => el.classList.add(c.o[j][1] ? 'ok' : (j === k ? 'no' : 'dim')));
+    $('#qzEx').innerHTML = `<div class="qz-ex ${ok ? 'g' : 'r'}"><b>${ok ? '✔ Chính xác!' : '✘ Chưa đúng.'}</b> ${st.m === 't' ? '🪤 ' : ''}${esc(c.e)}</div><button class="qz-go" data-a="go">${st.i + 1 >= st.q.length ? 'Xem kết quả' : 'Câu tiếp ▸'}</button>`;
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'qzModal';
+  modal.innerHTML = `<div class="qz-card"><div class="qz-hd"><b>📝 Ôn tập HSG</b><select id="qzLv" aria-label="Chọn Level">${LESSONS.map((l, i) => `<option value="${i}">${esc(l.name.split(':')[0])}${D[l.id] ? ' — ' + (D[l.id].m.length + D[l.id].t.length + (D[l.id].d || []).length) + ' câu' : ''}</option>`).join('')}</select><button class="qz-tab" data-m="m">Trắc nghiệm</button><button class="qz-tab" data-m="d">Đúng / Sai</button><button class="qz-tab trap" data-m="t">🪤 Bẫy đề HSG</button><button id="qzX" aria-label="Đóng">✕</button></div><div id="qzBody"></div></div>`;
+  document.body.appendChild(modal);
+
+  const open = () => { const sel = document.getElementById('lessonSelect'); st.l = Math.min(+(sel && sel.value) || 0, LESSONS.length - 1); $('#qzLv').value = st.l; modal.classList.add('on'); start(); };
+  const close = () => modal.classList.remove('on');
+
+  modal.addEventListener('click', e => {
+    if (e.target === modal || e.target.id === 'qzX') return close();
+    const tab = e.target.closest('.qz-tab');
+    if (tab) { st.m = tab.dataset.m; return start(); }
+    const a = e.target.closest('[data-a]');
+    if (a) {
+      const v = a.dataset.a;
+      if (v === 'again') start();
+      else if (v === 'wrong') start(st.w.slice());
+      else if (v === 'next') { st.l = (st.l + 1) % LESSONS.length; $('#qzLv').value = st.l; start(); }
+      else if (v === 'go') { st.i++; st.d = false; render(); }
+      return;
+    }
+    const tf = e.target.closest('.qz-tf button');
+    if (tf) return ds(tf);
+    const o = e.target.closest('.qz-o');
+    if (o) pick(+o.dataset.k);
+  });
+  $('#qzLv').addEventListener('change', e => { st.l = +e.target.value; start(); });
+  document.addEventListener('keydown', e => {
+    if (!modal.classList.contains('on')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key >= '1' && e.key <= '4') pick(+e.key - 1);
+    else if (e.key === 'Enter' && st.d) { const g = $('.qz-go'); if (g) g.click(); }
+  });
+
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'qz-fab'; btn.id = 'btnOpenQuiz';
+  btn.innerHTML = '📝 Trắc nghiệm &amp; Bẫy HSG';
+  btn.addEventListener('click', open);
+  const ref = document.getElementById('btnOpenAiHeader');
+  if (ref && ref.parentNode) ref.parentNode.insertBefore(btn, ref);
+  else { btn.style.cssText += ';position:fixed;right:14px;bottom:14px;z-index:60'; document.body.appendChild(btn); }
+})();
+</script>
+
+</body>
+</html>
